@@ -126,7 +126,7 @@ with open(results_file_path,"w") as results_file:
         losses = Corp_ID_Dict[corp_id]['losses']
         win_percent = round((wins/(wins+losses))*100,0)
         if(wins + losses > min_play_cutoff):
-            results_file.write(f"{corp_id}:\t{wins}:{losses}\t{win_percent}%")
+            results_file.write(f"{corp_id}:\t{wins}:{losses}\t{win_percent}%\n")
 
 
 
