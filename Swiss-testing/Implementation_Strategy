@@ -33,5 +33,10 @@ Determining edge weight: All algorithms should use maximum weight
 Paper creates a penalty system, and subtracts from a large constant- could probably build up instead
 Swiss Algo:
 Will probably have to divise this myself
-Weight = Old_Floater_Bonus + Score_closeness + SoS_difference + ESoS_difference - New_Floater_Penalty
+Weight = Old_Floater_Bonus + Score_closeness + SoS_difference + Top_vs_Bottom_bonus - New_Floater_Penalty
 For single Swiss have a Side_Played factor
+Top_vs_Bottom_bonus could come in some varieties:
+    1. High-Low matching - 1st in group plays last in group
+    2. High-Mid matching - If group is size 2N, pairings are (ideally) 1 v N, 2 v N+1, etc.
+    3. High-High- this is generally unfavored
+    4. Almafi- pair down based on round number
