@@ -1,0 +1,11 @@
+There are few different things to test and investigate
+
+Implement current swiss- random pairings within group
+Implement high-low swiss - top player in each score group plays bottom player
+Implement Almafi- Each player plays down place - R (R is rounds remaining number)
+
+
+Separately investigate single sided swiss
+If we split players in Runner then Corp and Corp then Runner does that heavily skew results?
+To test pre-generate players with a given strength, and a corp winrate of 65-75% and compare
+forced side vs strength and coin-flip

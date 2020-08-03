@@ -1,0 +1,37 @@
+Desires-
+
+Players can be generated with seeded distribution of skill
+Probability of player A winning should be P = A_str/(A_str + B_str)
+
+Can implement different pairing algorithms
+
+Can implement single side and double sided rounds, and mix them
+
+
+So what is the organizational structure?
+
+Tournament contains rounds
+Tournament tells a round how it is run
+
+Round pairs players based on algorithm
+
+Players get results based on their strength- report back to Tournament
+
+What is the weighting algorithm?
+Base it off of Weighted Matching paper- within a group test the pairing,
+You make N, N-1, N-2, ..., 1, 0 bins, and pair highest, then lowest, then repeat
+If odd number in group drop one down/pull one up
+Should a player have a preference for being moved down/up?
+If the number of floaters increases from one group to a next, retry consolidating the two groups
+
+
+This suggests I'll want to make an object that holds a group, and moves players up/down
+Almafi will use a single bin- though for the first two rounds you use regular Swiss.
+
+
+Determining edge weight: All algorithms should use maximum weight
+Paper creates a penalty system, and subtracts from a large constant- could probably build up instead
+Swiss Algo:
+Will probably have to divise this myself
+Weight = Old_Floater_Bonus + Score_closeness + SoS_difference + ESoS_difference - New_Floater_Penalty
+For single Swiss have a Side_Played factor
