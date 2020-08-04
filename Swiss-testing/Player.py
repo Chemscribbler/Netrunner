@@ -51,5 +51,4 @@ def gen_str(scaler):
     else:
         return scaler*math.exp((-1)*scaler*rand)
 
-player_list = [Player() for x in range(20)]
-print(player_list)
+# [print(player) for player in [Player() for x in range(20)]]
