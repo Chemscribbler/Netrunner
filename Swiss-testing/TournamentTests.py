@@ -48,6 +48,13 @@ class TestTournamentMethods(unittest.TestCase):
         self.assertCountEqual(t._score_groups[0],[player for player in t.player_list if player.score == 0])
         self.assertCountEqual(t._score_groups[1],[player for player in t.player_list if player.score == 1])
 
+    def test_node_addition(self):
+        t = simple_pairing_setup()
+        t.find_pairing_groups()
+        t.construct_network()
+        for node in t._active_pairing_graph.nodes:
+            self.assertIn(node.id, [player.id for player in t.player_list if player.score == 1])
+
 
 if __name__ == '__main__':
     unittest.main()
