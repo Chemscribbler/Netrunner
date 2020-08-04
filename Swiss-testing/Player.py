@@ -28,13 +28,14 @@ class Player():
         self.score = 0
         self.sos = 0
         self.ext_sos = 0
+        self.is_floater = False
 
 
     def __repr__(self):
-        return f"{self.id}"
+        return f"PID{self.id}"
 
     def __str__(self):
-        return f"{self.id}: {self.score} {self.sos}"
+        return f"PID{self.id}: {self.score} {self.sos}"
 
     def record_match(self, opp_id, side_given, result):
         self.opponent_list.append(opp_id)
