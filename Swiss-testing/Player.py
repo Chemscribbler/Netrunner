@@ -29,6 +29,7 @@ class Player():
         self.sos = 0
         self.ext_sos = 0
 
+
     def __repr__(self):
         return f"{self.id}"
 

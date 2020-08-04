@@ -5,7 +5,7 @@ import Player
 
 def simple_pairing_setup():
     t = Tournament.Tournament()
-    for i in range(2):
+    for _ in range(2):
         low_player = Player.Player()
         high_player = Player.Player()
         high_player.score = 1
@@ -14,8 +14,6 @@ def simple_pairing_setup():
     return t
 
 class TestTournamentMethods(unittest.TestCase):
-
-    # simple_pairing_setup = simple_pairing_setup()
 
     def test_add_player(self):
         t = Tournament.Tournament()
@@ -47,8 +45,8 @@ class TestTournamentMethods(unittest.TestCase):
     def test_player_allocation_pairing_groups(self):
         t = simple_pairing_setup()
         t.find_pairing_groups()
-        self.assertCountEqual(t._score_groups[0],[player.id for player in t.player_list if player.score == 0])
-        self.assertCountEqual(t._score_groups[1],[player.id for player in t.player_list if player.score == 1])
+        self.assertCountEqual(t._score_groups[0],[player for player in t.player_list if player.score == 0])
+        self.assertCountEqual(t._score_groups[1],[player for player in t.player_list if player.score == 1])
 
 
 if __name__ == '__main__':

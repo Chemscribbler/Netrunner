@@ -1,4 +1,5 @@
 import Player
+import networkx as nx
 
 class Tournament():
 
@@ -6,15 +7,17 @@ class Tournament():
         self.player_list = []
         self._score_groups = {}
         self.round = 0
+        self.pairings = {}
+
     
     def find_pairing_groups(self):
         self._score_groups = {}
 
         for player in self.player_list:
             try:
-                self._score_groups[player.score].append(player.id)
+                self._score_groups[player.score].append(player)
             except:
-                self._score_groups[player.score] = [player.id]
+                self._score_groups[player.score] = [player]
     
     def add_player(self, player):
         if self.round != 0:
@@ -24,3 +27,7 @@ class Tournament():
                 raise ValueError("Player already in Tournament")
             else:
                 self.player_list.append(player)
+    
+    def construct_network(self, group):
+        for player in group:
+            pass
