@@ -66,7 +66,7 @@ class Tournament():
         if iterate:  
             self.setup_next_network()
     
-    
+
     def setup_next_network(self): 
         try:       
             if self._pair_lowest_next:
@@ -84,44 +84,86 @@ class Tournament():
         if player_one.id in player_two.opponent_list:
             return 0
 
-        old_floater_penalty = self.compute_old_floater_penalty(player_one, player_two, player_one_index, player_two_index)
-        
-        
-        new_floater_penalty = 10 * (player_one_index + player_two_index)
-
-        side_penalty = self.compute_side_penalty(player_one, player_two)
-
-        random_weight = random.randint(0,10)
+        old_floater_penalty = self._compute_old_floater_penalty(player_one, player_two, player_one_index, player_two_index)
+        new_floater_penalty = self._compute_new_floater_penalty(player_one_index, player_two_index)
+        side_penalty = self._compute_side_penalty(player_one, player_two)
+        random_weight = random.randint(0,100)
 
         return 10000-(old_floater_penalty+new_floater_penalty+side_penalty+random_weight)
 
+    def high_high_swiss_weights(self, active_group, player_one_index, player_two_index):
+        player_one = active_group[player_one_index]
+        player_two = active_group[player_two_index]
 
-        
+        if player_one.id in player_two.opponent_list:
+            return 0
+
+        old_floater_penalty = self._compute_old_floater_penalty(player_one, player_two, player_one_index, player_two_index)
+        new_floater_penalty = self._compute_new_floater_penalty(player_one_index, player_two_index)
+        side_penalty = self._compute_side_penalty(player_one, player_two)
+        distance_penalty = self._high_high_penalty(player_one_index, player_two_index)
+
+        return 10000-(old_floater_penalty+new_floater_penalty+side_penalty+distance_penalty)
 
     def high_low_swiss_weights(self,active_group, player_one_index, player_two_index):
         pass
 
     def halfs_swiss_weights(self,active_group, player_one_index, player_two_index):
-        pass
+        player_one = active_group[player_one_index]
+        player_two = active_group[player_two_index]
+
+        if player_one.id in player_two.opponent_list:
+            return 0
+
+        old_floater_penalty = self._compute_old_floater_penalty(player_one, player_two, player_one_index, player_two_index)
+        new_floater_penalty = self._compute_new_floater_penalty(player_one_index, player_two_index)
+        side_penalty = self._compute_side_penalty(player_one, player_two)
+        distance_penalty = self._halfway_pairing_penalty(active_group,player_one_index, player_two_index)
+
+        return 10000-(old_floater_penalty+new_floater_penalty+side_penalty+distance_penalty)
 
     def almafi_weights(self,active_group,player_one_index, player_two_index):
         pass
 
+
     algorithms = {
+        "high_high_swiss": high_high_swiss_weights,
         "random_swiss": random_Swiss_weights,
         "high_low_swiss": high_low_swiss_weights,
         "halfs_swiss": halfs_swiss_weights,
         "almafi": almafi_weights
     }
 
-    def compute_old_floater_penalty(self,player_one, player_two, player_one_index, player_two_index):
+    def _compute_old_floater_penalty(self,player_one, player_two, player_one_index, player_two_index):
         if player_one.score == player_two.score:
             return 0
         else:
             return 25*(player_one.score - player_two.score)*abs(player_one_index - player_two_index)-500
+
+    def _compute_new_floater_penalty(self, player_one_index, player_two_index):
+        return 10 * (player_one_index + player_two_index)
     
-    def compute_side_penalty(self, player_one, player_two):
+    def _compute_side_penalty(self, player_one, player_two):
         if player_one.side_balance * player_two.side_balance > 0:
-            return 25*(8^(min(abs(player_one.side_balance),abs(player_two.side_balance))))
+            exponent = min(abs(player_one.side_balance),abs(player_two.side_balance))
+            return 25*(8**exponent)
         else:
             return 0
+
+    def _halfway_pairing_penalty(self, active_group, player_one_index, player_two_index):
+        if active_group[player_one_index].score != active_group[player_two_index]:
+            return 0
+        else:
+            count_of_floaters = 0
+            for player in active_group:
+                if player.is_floater:
+                    count_of_floaters += 1
+            constant = (len(active_group) - 2*count_of_floaters)/2
+
+            return constant - abs(player_one_index - player_two_index)**2
+
+    def _high_low_penalty(self, group_size, player_one_index, player_two_index):
+        pass
+
+    def _high_high_penalty(self, player_one_index, player_two_index):
+        return abs(player_one_index - player_two_index)

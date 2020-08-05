@@ -58,12 +58,6 @@ class TestTournamentMethods(unittest.TestCase):
         self.assertCountEqual(t._score_groups[0],[player for player in t.player_list if player.score == 0])
         self.assertCountEqual(t._score_groups[1],[player for player in t.player_list if player.score == 1])
 
-    def test_node_addition(self):
-        t = simple_pairing_setup()
-        t.find_pairing_groups()
-        t.construct_network()
-        for node in t._active_pairing_graph.nodes:
-            self.assertIn(node.id, [player.id for player in t.player_list if player.score == 1])
     
     def test_pairing_flip(self):
         player_list = []
@@ -86,16 +80,70 @@ class TestTournamentMethods(unittest.TestCase):
         self.assertEqual(t._next_unpaired_group, 1)
         self.assertTrue(t._pair_lowest_next)
 
-    def test_random_weight_calculation(self):
-        t = Tournament.Tournament()
-        for _ in range(2):
-            t.add_player(Player.Player())
-        t.find_pairing_groups()
-        for _ in range(100):
-            t.construct_network(iterate=False)
-            self.assertGreater(t._active_pairing_graph[t.player_list[0]][t.player_list[1]]['weight'], 10000 - 30)
-            self.assertLess(t._active_pairing_graph[t.player_list[0]][t.player_list[1]]['weight'], 10000)
+    def test_factors(self):
+        p1 = Player.Player()
+        p2 = Player.Player()
 
+        p1_index = 0
+        p2_index = 1
+
+        t = Tournament.Tournament()
+
+        #Testing Old Floater
+        self.assertEqual(t._compute_old_floater_penalty(p1, p2, p1_index, p2_index),0)
+        p1.score = 1
+        self.assertEqual(t._compute_old_floater_penalty(p1, p2, p1_index, p2_index), -475)
+        
+        #Testing side penalties
+        self.assertEqual(t._compute_side_penalty(p1, p2), 0)
+        p1.side_balance = 1
+        p2.side_balance = -1
+        self.assertEqual(t._compute_side_penalty(p1,p2), 0)
+        p2.side_balance = 1
+        self.assertEqual(t._compute_side_penalty(p1, p2), 25*8)
+        p2.side_balance = 2
+        self.assertEqual(t._compute_side_penalty(p1, p2),25*8)
+        p1.side_balance = 2
+        self.assertEqual(t._compute_side_penalty(p1,p2), 25*(8**2))
+        p1.side_balance = -2
+        self.assertEqual(t._compute_side_penalty(p1,p2),0)
+        p2.side_balance = -2
+        self.assertEqual(t._compute_side_penalty(p1,p2),25*(8**2))
+
+        #Testing New Float Penalty
+        self.assertEqual(t._compute_new_floater_penalty(p1_index, p2_index), 10)
+        p2_index = 5
+        self.assertEqual(t._compute_new_floater_penalty(p1_index,p2_index), 50)
+        p1_index = 1
+        self.assertEqual(t._compute_new_floater_penalty(p1_index,p2_index), 60)
+
+    def test_node_addition(self):
+        t = simple_pairing_setup()
+        t.find_pairing_groups()
+        t.construct_network()
+        for node in t._active_pairing_graph.nodes:
+            self.assertIn(node.id, [player.id for player in t.player_list if player.score == 1])
+        
+    def test_sorting_function(self):
+        p1 = Player.Player()
+        p1.sos = 10
+        p2 = Player.Player()
+        p2.sos = 5
+        p3 = Player.Player()
+        p3.sos = 20
+        p4 = Player.Player()
+        p4.sos = 1
+
+        t = Tournament.Tournament()
+        t.add_player(p1)
+        t.add_player(p2)
+        t.add_player(p3)
+        t.add_player(p4)
+
+        t.find_pairing_groups()
+        t.construct_network(iterate=False)
+        self.assertEqual(list(t._active_pairing_graph.nodes), [p3, p1, p2, p4])
+        self.assertNotEqual(list(t._active_pairing_graph.nodes), [p3, p1, p4, p2])
 
 if __name__ == '__main__':
     unittest.main()
