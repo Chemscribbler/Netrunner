@@ -2,17 +2,8 @@ import unittest
 import Tournament
 import Player
 import random
+import TestUtilities
 
-
-def simple_pairing_setup():
-    t = Tournament.Tournament()
-    for _ in range(2):
-        low_player = Player.Player()
-        high_player = Player.Player()
-        high_player.score = 1
-        t.add_player(low_player)
-        t.add_player(high_player)
-    return t
 
 class TestTournamentMethods(unittest.TestCase):
 
@@ -48,12 +39,12 @@ class TestTournamentMethods(unittest.TestCase):
         self.assertEqual(t._score_groups[0],t.player_list)
 
     def test_number_of_pairing_groups(self):
-        t = simple_pairing_setup()
+        t = TestUtilities.simple_pairing_setup()
         t.find_pairing_groups()
         self.assertCountEqual(t._score_groups, [0,1])
 
     def test_player_allocation_pairing_groups(self):
-        t = simple_pairing_setup()
+        t = TestUtilities.simple_pairing_setup()
         t.find_pairing_groups()
         self.assertCountEqual(t._score_groups[0],[player for player in t.player_list if player.score == 0])
         self.assertCountEqual(t._score_groups[1],[player for player in t.player_list if player.score == 1])
@@ -69,15 +60,16 @@ class TestTournamentMethods(unittest.TestCase):
             t.add_player(player)
 
         t.find_pairing_groups()
-        self.assertEqual(t._next_unpaired_group, 2)
+        t.choose_next_pairing_group()
+        self.assertEqual(t._pairing_group_score, 2)
         self.assertTrue(t._pair_lowest_next)
 
-        t.setup_next_network()
-        self.assertEqual(t._next_unpaired_group, 0)
+        t.choose_next_pairing_group()
+        self.assertEqual(t._pairing_group_score, 0)
         self.assertFalse(t._pair_lowest_next)
 
-        t.setup_next_network()
-        self.assertEqual(t._next_unpaired_group, 1)
+        t.choose_next_pairing_group()
+        self.assertEqual(t._pairing_group_score, 1)
         self.assertTrue(t._pair_lowest_next)
 
     def test_factors(self):
@@ -118,8 +110,9 @@ class TestTournamentMethods(unittest.TestCase):
         self.assertEqual(t._compute_new_floater_penalty(p1_index,p2_index), 60)
 
     def test_node_addition(self):
-        t = simple_pairing_setup()
+        t = TestUtilities.simple_pairing_setup()
         t.find_pairing_groups()
+        t.choose_next_pairing_group()
         t.construct_network()
         for node in t._active_pairing_graph.nodes:
             self.assertIn(node.id, [player.id for player in t.player_list if player.score == 1])
@@ -144,6 +137,34 @@ class TestTournamentMethods(unittest.TestCase):
         t.construct_network(iterate=False)
         self.assertEqual(list(t._active_pairing_graph.nodes), [p3, p1, p2, p4])
         self.assertNotEqual(list(t._active_pairing_graph.nodes), [p3, p1, p4, p2])
+
+    def test_high_high_pairing(self):
+
+        
+        #Tests no valid pairings
+
+        #tests even number- 1-2, 3-4, 5,-6, 7-8
+        t = TestUtilities.eight_pairing_setup()
+        t.find_pairing_groups()
+        t.choose_next_pairing_group()
+        t.find_pairings(algorithm="random_swiss")
+
+        t = TestUtilities.four_by_two_setup()
+        t.find_pairing_groups()
+        t.choose_next_pairing_group()
+        t.find_pairings(algorithm="high_high_swiss")
+
+        
+        # for i in range(len(t.player_list)/2):
+
+        #test even number with 1-2 already played
+
+        #test even number with 1-2, 3-4 already played (1-3, 2-4 expected)
+
+        #tests odd number, drop down: 1-2, 3-4, 5-6, 7-8, 9
+
+        #tests odd number with dropped down: 1-9, 2-3, 4-5, 6-7, 8
+        pass
 
 if __name__ == '__main__':
     unittest.main()

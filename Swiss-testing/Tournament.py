@@ -11,7 +11,7 @@ class Tournament():
         self.pairings = {}
         self._active_pairing_graph = nx.Graph()
         self._unpaired_groups = []
-        self._next_unpaired_group = 0 #score integer
+        self._pairing_group_score = 0 #score integer
         self._pair_lowest_next = False
         self.round_paired = False
 
@@ -29,7 +29,8 @@ class Tournament():
                 self._score_groups[player.score] = [player]
         
         self._unpaired_groups.sort(reverse=True)
-        self.setup_next_network()
+        self._pairing_group_score = self._unpaired_groups[0]
+        # self.choose_next_pairing_group()
         
     
     def add_player(self, player):
@@ -41,8 +42,8 @@ class Tournament():
             else:
                 self.player_list.append(player)
     
-    def construct_network(self,algorithm="random_swiss",iterate=True):
-        active_group = self._score_groups[self._next_unpaired_group]
+    def construct_network(self,algorithm="random_swiss",iterate=False):
+        active_group = self._score_groups[self._pairing_group_score]
         new_graph = nx.Graph()
 
         #Sort by SoS then Score to deal with floaters
@@ -64,18 +65,30 @@ class Tournament():
         self._active_pairing_graph = new_graph
         
         if iterate:  
-            self.setup_next_network()
-    
+            self.choose_next_pairing_group()    
 
-    def setup_next_network(self): 
+    def choose_next_pairing_group(self): 
         try:       
             if self._pair_lowest_next:
-                self._next_unpaired_group = self._unpaired_groups.pop(-1)
+                self._pairing_group_score = self._unpaired_groups.pop(-1)
             else:
-                self._next_unpaired_group = self._unpaired_groups.pop(0)
+                self._pairing_group_score = self._unpaired_groups.pop(0)
         except IndexError:
             self.round_paired = True
         self._pair_lowest_next = not self._pair_lowest_next
+
+    def find_pairings(self, algorithm="random_swiss",**kwargs):
+        self.construct_network(algorithm=algorithm,**kwargs)
+        self.pairings[self._pairing_group_score] = nx.max_weight_matching(self._active_pairing_graph)
+        print(self.pairings)
+        # print(self._unpaired_groups)
+        self.choose_next_pairing_group()
+        # print(self.round_paired)
+        if not self.round_paired:
+            self.find_pairings(algorithm=algorithm, **kwargs)
+        else:
+            return
+        
     
     def random_Swiss_weights(self,active_group,player_one_index, player_two_index):
         player_one = active_group[player_one_index]
@@ -87,7 +100,7 @@ class Tournament():
         old_floater_penalty = self._compute_old_floater_penalty(player_one, player_two, player_one_index, player_two_index)
         new_floater_penalty = self._compute_new_floater_penalty(player_one_index, player_two_index)
         side_penalty = self._compute_side_penalty(player_one, player_two)
-        random_weight = random.randint(0,100)
+        random_weight = random.randint(0,len(active_group))
 
         return 10000-(old_floater_penalty+new_floater_penalty+side_penalty+random_weight)
 
@@ -163,7 +176,7 @@ class Tournament():
             return constant - abs(player_one_index - player_two_index)**2
 
     def _high_low_penalty(self, group_size, player_one_index, player_two_index):
-        pass
+        return group_size - abs(player_one_index - player_two_index)
 
     def _high_high_penalty(self, player_one_index, player_two_index):
         return abs(player_one_index - player_two_index)
