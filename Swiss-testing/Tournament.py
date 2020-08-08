@@ -14,6 +14,7 @@ class Tournament():
         self._pairing_group_score = 0 #score integer
         self._pair_lowest_next = False
         self.round_paired = False
+        self.LARGE_CONSTANT = 10000
 
     
     def find_pairing_groups(self):
@@ -42,6 +43,8 @@ class Tournament():
             else:
                 self.player_list.append(player)
     
+    #Constructs the graph of the active pairing group based on the model
+    #algorithms: random_swiss, high_high_swiss, high_low_swiss, halfs_swiss, almafi_swiss 
     def construct_network(self,algorithm="random_swiss",iterate=False):
         active_group = self._score_groups[self._pairing_group_score]
         new_graph = nx.Graph()
@@ -90,7 +93,7 @@ class Tournament():
             return
         
     
-    def random_Swiss_weights(self,active_group,player_one_index, player_two_index):
+    def _constant_weights(self, active_group, player_one_index, player_two_index):
         player_one = active_group[player_one_index]
         player_two = active_group[player_two_index]
 
@@ -100,40 +103,29 @@ class Tournament():
         old_floater_penalty = self._compute_old_floater_penalty(player_one, player_two, player_one_index, player_two_index)
         new_floater_penalty = self._compute_new_floater_penalty(player_one_index, player_two_index)
         side_penalty = self._compute_side_penalty(player_one, player_two)
-        random_weight = random.randint(0,len(active_group))
+        return old_floater_penalty+new_floater_penalty+side_penalty
 
-        return 10000-(old_floater_penalty+new_floater_penalty+side_penalty+random_weight)
+    def random_Swiss_weights(self,active_group,player_one_index, player_two_index):
+        constant_penalties = self._constant_weights(active_group, player_one_index, player_two_index)
+        random_weight = random.randint(0,100)
+        return self.LARGE_CONSTANT-(constant_penalties+random_weight)
 
     def high_high_swiss_weights(self, active_group, player_one_index, player_two_index):
-        player_one = active_group[player_one_index]
-        player_two = active_group[player_two_index]
-
-        if player_one.id in player_two.opponent_list:
-            return 0
-
-        old_floater_penalty = self._compute_old_floater_penalty(player_one, player_two, player_one_index, player_two_index)
-        new_floater_penalty = self._compute_new_floater_penalty(player_one_index, player_two_index)
-        side_penalty = self._compute_side_penalty(player_one, player_two)
+        constant_penalties = self._constant_weights(active_group, player_one_index, player_two_index)
         distance_penalty = self._high_high_penalty(player_one_index, player_two_index)
-
-        return 10000-(old_floater_penalty+new_floater_penalty+side_penalty+distance_penalty)
+        return self.LARGE_CONSTANT - (constant_penalties + distance_penalty)
 
     def high_low_swiss_weights(self,active_group, player_one_index, player_two_index):
-        pass
+        constant_penalties = self._constant_weights(active_group, player_one_index, player_two_index)
+        distance_penalty = self._high_low_penalty(active_group,player_one_index, player_two_index)
+
+        return self.LARGE_CONSTANT - (constant_penalties + distance_penalty)
 
     def halfs_swiss_weights(self,active_group, player_one_index, player_two_index):
-        player_one = active_group[player_one_index]
-        player_two = active_group[player_two_index]
-
-        if player_one.id in player_two.opponent_list:
-            return 0
-
-        old_floater_penalty = self._compute_old_floater_penalty(player_one, player_two, player_one_index, player_two_index)
-        new_floater_penalty = self._compute_new_floater_penalty(player_one_index, player_two_index)
-        side_penalty = self._compute_side_penalty(player_one, player_two)
+        constant_penalties = self._constant_weights(active_group, player_one_index, player_two_index)
         distance_penalty = self._halfway_pairing_penalty(active_group,player_one_index, player_two_index)
 
-        return 10000-(old_floater_penalty+new_floater_penalty+side_penalty+distance_penalty)
+        return self.LARGE_CONSTANT - (constant_penalties + distance_penalty)
 
     def almafi_weights(self,active_group,player_one_index, player_two_index):
         pass
@@ -173,10 +165,17 @@ class Tournament():
                     count_of_floaters += 1
             constant = (len(active_group) - 2*count_of_floaters)/2
 
-            return constant - abs(player_one_index - player_two_index)**2
+            return (constant - abs(player_one_index - player_two_index))**2
 
-    def _high_low_penalty(self, group_size, player_one_index, player_two_index):
-        return group_size - abs(player_one_index - player_two_index)
+    def _high_low_penalty(self, active_group, player_one_index, player_two_index):
+        if active_group[player_one_index].score != active_group[player_two_index].score:
+            return 0
+        else:
+            count_of_floaters = 0
+            for player in active_group:
+                if player.is_floater:
+                    count_of_floaters += 1
+            return (len(active_group)-count_of_floaters - abs(player_one_index - player_two_index))**2
 
     def _high_high_penalty(self, player_one_index, player_two_index):
         return abs(player_one_index - player_two_index)
