@@ -1,6 +1,20 @@
 import Tournament
 import Player 
 
+def reorder_by_PID(tournament):
+    list_of_matches = []
+    for score_group, matches in tournament.pairings.items():
+        for match in matches:
+            p1 = match[0]
+            p2 = match[1]
+            if p1.id < p2.id:
+                list_of_matches.append((p1,p2))
+            else:
+                list_of_matches.append((p2,p1))
+    
+    return list_of_matches
+
+
 def simple_pairing_setup():
     t = Tournament.Tournament()
     for _ in range(2):
@@ -16,7 +30,7 @@ def eight_pairing_setup():
     for i in range(8):
         player = Player.Player()
         player.score = 1
-        player.sos = i
+        player.sos = 7-i
         t.add_player(player)
     return t
 
@@ -25,11 +39,11 @@ def four_by_two_setup():
     for i in range(4):
         player = Player.Player()
         player.score = 1
-        player.sos = i
+        player.sos = 3-i
         t.add_player(player)
     for i in range(4):
         player = Player.Player()
-        player.sos = i
+        player.sos = 3-i
         t.add_player(player)
     return t
 
@@ -37,7 +51,7 @@ def eight_floater_down_setup():
     t = Tournament.Tournament()
     for i in range(7):
         player = Player.Player()
-        player.sos = i
+        player.sos = 6-i
         t.add_player(player)
     player = Player.Player()
     player.score = 1
@@ -49,7 +63,7 @@ def nine_pairing_setup():
     t = Tournament.Tournament()
     for i in range(9):
         player = Player.Player()
-        player.sos = i
+        player.sos = 8-i
         t.add_player(player)
     return t
 
@@ -57,7 +71,7 @@ def nine_pairing_floater_setup():
     t = Tournament.Tournament()
     for i in range(8):
         player = Player.Player()
-        player.sos = i
+        player.sos = 8-i
         t.add_player(player)
     player = Player.Player()
     player.score = 1
@@ -70,7 +84,7 @@ def nine_pairing_floater_up_setup():
     for i in range(8):
         player = Player.Player()
         player.score = 1
-        player.sos = i
+        player.sos = 7-i
         t.add_player(player)
     player = Player.Player()
     player.sos = 2

@@ -62,7 +62,10 @@ class Tournament():
                 if i >= j:
                     pass
                 else:
-                    edge_weight = self.algorithms[algorithm](self,active_group, i, j)
+                    if active_group[i].id in active_group[j].opponent_list:
+                        edge_weight = 0
+                    else:
+                        edge_weight = self.algorithms[algorithm](self,active_group, i, j)
                     new_graph.add_edge(active_group[i],active_group[j],weight = edge_weight)
 
         self._active_pairing_graph = new_graph
@@ -83,22 +86,18 @@ class Tournament():
     def find_pairings(self, algorithm="random_swiss",**kwargs):
         self.construct_network(algorithm=algorithm,**kwargs)
         self.pairings[self._pairing_group_score] = nx.max_weight_matching(self._active_pairing_graph)
-        print(self.pairings)
-        # print(self._unpaired_groups)
+
         self.choose_next_pairing_group()
-        # print(self.round_paired)
         if not self.round_paired:
             self.find_pairings(algorithm=algorithm, **kwargs)
         else:
+            # print(self.pairings)
             return
         
     
     def _constant_weights(self, active_group, player_one_index, player_two_index):
         player_one = active_group[player_one_index]
         player_two = active_group[player_two_index]
-
-        if player_one.id in player_two.opponent_list:
-            return 0
 
         old_floater_penalty = self._compute_old_floater_penalty(player_one, player_two, player_one_index, player_two_index)
         new_floater_penalty = self._compute_new_floater_penalty(player_one_index, player_two_index)
@@ -178,4 +177,4 @@ class Tournament():
             return (len(active_group)-count_of_floaters - abs(player_one_index - player_two_index))**2
 
     def _high_high_penalty(self, player_one_index, player_two_index):
-        return abs(player_one_index - player_two_index)
+        return abs(player_one_index - player_two_index)**2

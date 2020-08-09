@@ -147,21 +147,64 @@ class TestTournamentMethods(unittest.TestCase):
         t = TestUtilities.eight_pairing_setup()
         t.find_pairing_groups()
         t.choose_next_pairing_group()
-        t.find_pairings(algorithm="random_swiss")
+        t.find_pairings(algorithm="high_high_swiss")
+        PID_ordered_pairings = TestUtilities.reorder_by_PID(t)
+        test_ordering = []
+        for i in range(0,len(t.player_list),2):
+            test_ordering.append((t.player_list[i],t.player_list[i+1]))
+        self.assertCountEqual(PID_ordered_pairings, test_ordering)
+        
 
         t = TestUtilities.four_by_two_setup()
         t.find_pairing_groups()
         t.choose_next_pairing_group()
         t.find_pairings(algorithm="high_high_swiss")
+        PID_ordered_pairings = TestUtilities.reorder_by_PID(t)
+        test_ordering = []
+        for i in range(0,len(t.player_list),2):
+            test_ordering.append((t.player_list[i],t.player_list[i+1]))
+        self.assertCountEqual(PID_ordered_pairings, test_ordering)
 
-        
-        # for i in range(len(t.player_list)/2):
+        #test even number with 1-2 already played- 1-3, 2-4 expected
+        t =TestUtilities.eight_pairing_setup()
+        t.player_list[0].opponent_list.append(t.player_list[1].id)
+        t.player_list[1].opponent_list.append(t.player_list[0].id)
+        t.find_pairing_groups()
+        t.choose_next_pairing_group()
+        t.find_pairings(algorithm="high_high_swiss")
+        PID_ordered_pairings = TestUtilities.reorder_by_PID(t)
+        test_ordering = []
+        test_ordering.append((t.player_list[0],t.player_list[2]))
+        test_ordering.append((t.player_list[1],t.player_list[3]))
+        for i in range(4,len(t.player_list),2):
+            test_ordering.append((t.player_list[i],t.player_list[i+1]))
+        self.assertCountEqual(PID_ordered_pairings, test_ordering)
 
-        #test even number with 1-2 already played
 
         #test even number with 1-2, 3-4 already played (1-3, 2-4 expected)
+        t =TestUtilities.eight_pairing_setup()
+        t.player_list[0].opponent_list.append(t.player_list[1].id)
+        t.player_list[1].opponent_list.append(t.player_list[0].id)
+        t.player_list[3].opponent_list.append(t.player_list[4].id)
+        t.player_list[4].opponent_list.append(t.player_list[3].id)
+        t.find_pairing_groups()
+        t.choose_next_pairing_group()
+        t.find_pairings(algorithm="high_high_swiss")
+        PID_ordered_pairings = TestUtilities.reorder_by_PID(t)
+        test_ordering = []
+        test_ordering.append((t.player_list[0],t.player_list[2]))
+        test_ordering.append((t.player_list[1],t.player_list[3]))
+        for i in range(4,len(t.player_list),2):
+            test_ordering.append((t.player_list[i],t.player_list[i+1]))
+        self.assertCountEqual(PID_ordered_pairings, test_ordering)
 
         #tests odd number, drop down: 1-2, 3-4, 5-6, 7-8, 9
+        t = TestUtilities.nine_pairing_setup()
+        t.find_pairing_groups()
+        t.choose_next_pairing_group()
+        t.find_pairings(algorithm="high_high_swiss")
+        # print(t.pairings)
+        # [print(f"{player.id} {player.sos}") for player in t.player_list] 
 
         #tests odd number with dropped down: 1-9, 2-3, 4-5, 6-7, 8
         pass
