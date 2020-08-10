@@ -4,7 +4,7 @@ import math
 class Player():
     next_id = 0
     
-    def __init__(self, str= None, scaler=1):
+    def __init__(self, str= None, scaler=1, score=0, sos=0):
         if str is not None:
             self.str = str
         else:
@@ -25,8 +25,8 @@ class Player():
 
         #Results list
         self.results_list = []
-        self.score = 0
-        self.sos = 0
+        self.score = score
+        self.sos = sos
         self.ext_sos = 0
         self.is_floater = False
 
@@ -37,12 +37,10 @@ class Player():
     def __str__(self):
         return f"PID{self.id}: {self.score} {self.sos}"
 
-    def record_match(self, opp_id, side_given, result):
+    def record_match(self, opp_id, result):
         self.opponent_list.append(opp_id)
-        self.side_order.append(side_given)
-        self.side_order.append(side_given)
-        self.side_balance += side_given
-        self.score += result*3
+        self.score += result
+        self.results_list.append(result)
         
 
 
