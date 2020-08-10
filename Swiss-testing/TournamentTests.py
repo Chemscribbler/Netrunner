@@ -203,6 +203,7 @@ class TestTournamentMethods(unittest.TestCase):
         t.find_pairing_groups()
         t.choose_next_pairing_group()
         t.find_pairings(algorithm="high_high_swiss")
+        self.assertIn(t.player_list[0], t.pairings[0])
         # print(t.pairings)
         # [print(f"{player.id} {player.sos}") for player in t.player_list] 
 
