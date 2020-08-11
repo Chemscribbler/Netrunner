@@ -86,7 +86,7 @@ class Tournament():
         p2 = pairing[1]
 
         win_percent = p1.str/(p1.str + p2.str)
-        roll = random.random(0,1)
+        roll = random.random()
         if win_percent < roll:
             p1.record_match(p2.id, 1)
             p2.record_match(p1.id, 0)
