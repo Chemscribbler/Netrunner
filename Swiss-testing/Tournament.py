@@ -143,7 +143,7 @@ class Tournament():
             return 0
 
     def _compute_score_penalty(self, player_one_index, player_two_index):
-        return 1000 * abs(self.player_list[player_one_index].score - self.player_list[player_two_index].score)
+        return 50 * abs(self.player_list[player_one_index].score - self.player_list[player_two_index].score)
 
     def _almafi_penalty(self, player_one_index, player_two_index):
         return (self.round - abs(player_one_index - player_two_index))*200
