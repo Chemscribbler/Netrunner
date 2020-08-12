@@ -41,6 +41,17 @@ class Player():
         self.opponent_list.append(opp_id)
         self.score += result
         self.results_list.append(result)
+
+    def reset_stats(self):
+        self.side_balance = 0
+        self.opponent_list = []
+        self.side_order = []
+        self.results_list = []
+        self.score = 0
+        self.sos = 0
+        self.ext_sos = 0
+        self.is_floater = False
+
         
 
 

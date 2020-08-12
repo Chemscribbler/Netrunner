@@ -41,15 +41,32 @@ class TestTournamentMethods(unittest.TestCase):
 
     def test_second_round_pairing(self):
         t = Tournament()
-        for _ in range(50):
+        for _ in range(8):
             t.add_player(Player(score=2))
-        for _ in range(50):
+        for _ in range(8):
             t.add_player(Player())
-        for _ in range(50):
+        for _ in range(8):
             t.add_player(Player(score=1))
         t.find_pairings()
         for pair in t.pairings:
             self.assertEqual(pair[0].score, pair[1].score)
+    
+    def test_match_functions(self):
+        t = Tournament()
+        p1 = Player()
+        p2 = Player()
+        match = (p1, p2)
+        t.sim_match(match)
+        self.assertEqual(p1.opponent_list,[p2.id])
+
+    def test_round_sim(self):
+        t = Tournament()
+        for _ in range(4):
+            t.add_player(Player())
+        t.sim_round()
+        for player in t.player_list:
+            self.assertEqual(len(player.opponent_list),1)
+
 
 
 if __name__ == '__main__':

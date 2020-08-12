@@ -87,7 +87,7 @@ class Tournament():
 
         win_percent = p1.str/(p1.str + p2.str)
         roll = random.random()
-        if win_percent < roll:
+        if win_percent > roll:
             p1.record_match(p2.id, 1)
             p2.record_match(p1.id, 0)
         else:
@@ -99,10 +99,23 @@ class Tournament():
         self.find_pairings()
         for pair in self.pairings:
             self.sim_match(pair)
+        self.compute_sos()
+        
     
     def sim_tournament(self, n_rounds):
         while self.round < n_rounds:
             self.sim_round()
+
+    def compute_sos(self):
+        for player in self.player_list:
+            opponent_total_score = 0
+            opponents_games_played = 0
+            for opponent_id in player.opponent_list:
+                opponent = next((opponent for opponent in self.player_list if opponent.id == opponent_id),None)
+                opponent_total_score += opponent.score
+                opponents_games_played += len(opponent.opponent_list)
+            player.sos = opponent_total_score/opponents_games_played
+
 
     def random_Swiss_weights(self,player_one_index, player_two_index):
         side_penalty = self._compute_side_penalty(player_one_index, player_two_index)
