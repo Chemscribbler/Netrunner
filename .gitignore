@@ -1,3 +1,4 @@
 .vscode/launch.json
 Swiss-testing/__pycache__/*
 Swiss-testing/results.csv
+Swiss-testing/Swiss_testing.xlsx
