@@ -66,19 +66,20 @@ def testing_defined_players(num_tests, player_list, num_rounds, file_name='resul
     return player_list
 
 if __name__ == "__main__":
-    players = tilted_strength(32,5)
-    num_sims = 5000
+    players = tilted_strength(32,6)
+    num_sims = 1000
+    num_rounds = 6
     for player in players:
         player.finish = [0]*32
         player.final_side_balance = []
-    testing_defined_players(num_sims,players,6)
+    testing_defined_players(num_sims,players,num_rounds)
     [print(player.finish) for player in players]
     for player in players:
         count = player.final_side_balance.count(0)
         top_eight = 0
         for i in range(8):
             top_eight += player.finish[i]
-        print(f"{player.id}: Str:{player.str} Unbalnced:{num_sims-count} Top 8:{top_eight}")
+        print(f"PID:{player.id} Str:{player.str} Unbalnced:{num_sims-count} Top8:{top_eight} OffPairing:{(player.paired_up+player.paired_down)/(num_sims*num_rounds)*100}")
 
 
     # even_testing(100)

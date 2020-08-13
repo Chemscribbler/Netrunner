@@ -85,8 +85,17 @@ class Tournament():
         p1 = pairing[0]
         p2 = pairing[1]
 
+        if p1.score != p2.score:
+            if p1.score < p2.score:
+                p1.paired_up += 1
+                p2.paired_down += 1
+            else:
+                p1.paired_down += 1
+                p2.paired_up += 1
+
         win_percent = p1.str/(p1.str + p2.str)
         roll = random.random()
+        
         if win_percent > roll:
             p1.record_match(p2.id, 1)
             p2.record_match(p1.id, 0)
@@ -143,7 +152,7 @@ class Tournament():
             return 0
 
     def _compute_score_penalty(self, player_one_index, player_two_index):
-        return 50 * abs(self.player_list[player_one_index].score - self.player_list[player_two_index].score)
+        return 75 * abs(self.player_list[player_one_index].score - self.player_list[player_two_index].score)
 
     def _almafi_penalty(self, player_one_index, player_two_index):
         return (self.round - abs(player_one_index - player_two_index))*200

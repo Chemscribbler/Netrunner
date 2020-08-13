@@ -30,6 +30,9 @@ class Player():
         self.ext_sos = 0
         self.is_floater = False
 
+        self.paired_up = 0
+        self.paired_down = 0
+
 
     def __repr__(self):
         return f"PID{self.id}"
