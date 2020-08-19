@@ -4,7 +4,7 @@ import math
 class Player():
     next_id = 0
     
-    def __init__(self, str= None, scaler=1):
+    def __init__(self, str= None, scaler=1, score=0, sos=0):
         if str is not None:
             self.str = str
         else:
@@ -25,10 +25,14 @@ class Player():
 
         #Results list
         self.results_list = []
-        self.score = 0
-        self.sos = 0
+        self.score = score
+        self.sos = sos
         self.ext_sos = 0
         self.is_floater = False
+
+        self.paired_up = 0
+        self.paired_down = 0
+        self.pairing_diff = 0
 
 
     def __repr__(self):
@@ -37,20 +41,25 @@ class Player():
     def __str__(self):
         return f"PID{self.id}: {self.score} {self.sos}"
 
-    def record_match(self, opp_id, side_given, result):
+    def record_match(self, opp_id, result):
         self.opponent_list.append(opp_id)
-        self.side_order.append(side_given)
-        self.side_order.append(side_given)
-        self.side_balance += side_given
-        self.score += result*3
+        self.score += result
+        self.results_list.append(result)
+
+    def reset_stats(self):
+        self.side_balance = 0
+        self.opponent_list = []
+        self.side_order = []
+        self.results_list = []
+        self.score = 0
+        self.sos = 0
+        self.ext_sos = 0
+        self.is_floater = False
+
         
 
 
 def gen_str(scaler):
-    rand = random.random()
-    if rand == 0:
-        return 0
-    else:
-        return scaler*math.exp((-1)*scaler*rand)
+    return random.lognormvariate(mu=0.5,sigma=scaler)
 
 # [print(player) for player in [Player() for x in range(20)]]
