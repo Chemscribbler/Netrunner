@@ -16,6 +16,7 @@ class Tournament():
         self.round_paired = False
         self.LARGE_CONSTANT = 15000
         self.bye_player = Player(0)
+        self.score_factor = 250
         
     
     def add_player(self, player):
@@ -81,11 +82,21 @@ class Tournament():
                     pair[1].side_balance += 1
                     pair[1].side_order.append(1)
 
-    def sim_match(self, pairing):
+    def sim_match(self, pairing,side_weight=0.5):
         p1 = pairing[0]
         p2 = pairing[1]
 
+        if p1.side_order[-1] == 1:
+            p1.effective_str = p1.str * side_weight
+            p2.effective_str = p2.str * (1-side_weight)
+        else:
+            p1.effective_str = p1.str * (1-side_weight)
+            p2.effective_str = p2.str * side_weight
+
+        #This is for stat collection
         if p1.score != p2.score:
+            p1.pairing_diff += abs(p1.score - p2.score)
+            p2.pairing_diff += abs(p1.score - p2.score)
             if p1.score < p2.score:
                 p1.paired_up += 1
                 p2.paired_down += 1
@@ -93,7 +104,7 @@ class Tournament():
                 p1.paired_down += 1
                 p2.paired_up += 1
 
-        win_percent = p1.str/(p1.str + p2.str)
+        win_percent = p1.effective_str/(p1.effective_str + p2.effective_str)
         roll = random.random()
         
         if win_percent > roll:
@@ -103,17 +114,67 @@ class Tournament():
             p1.record_match(p2.id,0)
             p2.record_match(p1.id,1)
     
-    def sim_round(self):
+    def sim_second_match(self, pairing,side_weight=0.5):
+        p1 = pairing[0]
+        p2 = pairing[1]
+
+        p1.side_balance += (p1.side_order[-1]*(-1))
+        p1.side_order.append(p1.side_order[-1]*(-1))
+
+        
+        p2.side_balance += (p2.side_order[-1]*(-1))
+        p2.side_order.append(p2.side_order[-1]*(-1))
+
+        if p1.side_order[-1] == 1:
+            p1.effective_str = p1.str * side_weight
+            p2.effective_str = p2.str * (1-side_weight)
+        else:
+            p1.effective_str = p1.str * (1-side_weight)
+            p2.effective_str = p2.str * side_weight
+
+        #This is for stat collection
+        if p1.score != p2.score:
+            p1.pairing_diff += abs(p1.score - p2.score)
+            p2.pairing_diff += abs(p1.score - p2.score)
+            if p1.score < p2.score:
+                p1.paired_up += 1
+                p2.paired_down += 1
+            else:
+                p1.paired_down += 1
+                p2.paired_up += 1
+
+        win_percent = p1.effective_str/(p1.effective_str + p2.effective_str)
+        roll = random.random()
+        
+        if win_percent > roll:
+            p1.record_match(p2.id, 1)
+            p2.record_match(p1.id, 0)
+        else:
+            p1.record_match(p2.id,0)
+            p2.record_match(p1.id,1)
+    
+    def sim_round(self,**kwargs):
         self.round += 1
         self.find_pairings()
         for pair in self.pairings:
-            self.sim_match(pair)
+            self.sim_match(pair,**kwargs)
         self.compute_sos()
-        
+    def sim_double_round(self,**kwargs):
+        self.round += 2
+        self.find_pairings()
+        for pair in self.pairings:
+            self.sim_match(pair,**kwargs)
+            self.sim_second_match(pair,**kwargs)
+        self.compute_sos()
     
-    def sim_tournament(self, n_rounds):
+    def sim_tournament(self, n_rounds,**kwargs):
         while self.round < n_rounds:
             self.sim_round()
+    
+    def sim_dss_tournament(self, n_rounds, **kwargs):
+        while self.round < n_rounds:
+            self.sim_double_round()
+    
 
     def compute_sos(self):
         for player in self.player_list:
@@ -152,7 +213,7 @@ class Tournament():
             return 0
 
     def _compute_score_penalty(self, player_one_index, player_two_index):
-        return 75 * abs(self.player_list[player_one_index].score - self.player_list[player_two_index].score)
+        return self.score_factor * abs(self.player_list[player_one_index].score - self.player_list[player_two_index].score)
 
     def _almafi_penalty(self, player_one_index, player_two_index):
         return (self.round - abs(player_one_index - player_two_index))*200

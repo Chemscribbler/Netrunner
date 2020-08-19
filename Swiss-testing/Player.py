@@ -32,6 +32,7 @@ class Player():
 
         self.paired_up = 0
         self.paired_down = 0
+        self.pairing_diff = 0
 
 
     def __repr__(self):
@@ -59,10 +60,6 @@ class Player():
 
 
 def gen_str(scaler):
-    rand = random.random()
-    if rand == 0:
-        return 0
-    else:
-        return scaler*math.exp((-1)*scaler*rand)
+    return random.lognormvariate(mu=0.5,sigma=scaler)
 
 # [print(player) for player in [Player() for x in range(20)]]
