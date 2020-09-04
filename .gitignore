@@ -4,3 +4,4 @@ Swiss-testing/__pycache__/*
 *.xlsx
 Swiss-testing/blog_data
 .gitignore
+.DS_Store
