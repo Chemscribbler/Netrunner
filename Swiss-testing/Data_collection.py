@@ -2,6 +2,8 @@ from Tournament import Tournament
 from Player import Player
 import csv
 import random
+import cProfile
+import re
 
 def even_strength(player_count):
     player_list = []
@@ -106,8 +108,8 @@ def reset_counter_stats(player_list):
 
 
 if __name__ == "__main__":
-    players = tilted_strength(32,0.5)
-    num_sims = 5000
+    players = tilted_strength(128,0.5)
+    num_sims = 100
     # with open("dist_2.csv",'w',newline='') as csv_file:
     #     writer = csv.writer(csv_file)
     #     for player in players:
@@ -118,8 +120,9 @@ if __name__ == "__main__":
     
     num_rounds = 8
     reset_counter_stats(players)
-    testing_double_swiss(num_sims,players,num_rounds)
-    results_collation(players,num_sims, "5000_dss_8_rounds")
+    cProfile.run('testing_double_swiss(num_sims,players,num_rounds)',sort='cumulative')
+    
+    # results_collation(players,num_sims, "5000_dss_8_rounds")
 
     # num_rounds = 4
     # reset_counter_stats(players)
@@ -131,16 +134,16 @@ if __name__ == "__main__":
     # testing_single_swiss(num_sims,players,num_rounds,score_factor=600)
     # results_collation(players,num_sims, "10000_sss_5_rounds")
     
-    num_rounds = 6
-    reset_counter_stats(players)
-    testing_single_swiss(num_sims,players,num_rounds,score_factor=600)
-    results_collation(players,num_sims, "5000_sss_6_rounds_sf_600")
-    reset_counter_stats(players)
-    testing_single_swiss(num_sims,players,num_rounds,score_factor=450)
-    results_collation(players,num_sims, "5000_sss_6_rounds_sf_450")
-    reset_counter_stats(players)
-    testing_single_swiss(num_sims,players,num_rounds,score_factor=200)
-    results_collation(players,num_sims, "5000_sss_6_rounds_sf_200")
+    # num_rounds = 6
+    # reset_counter_stats(players)
+    # testing_single_swiss(num_sims,players,num_rounds,score_factor=600)
+    # results_collation(players,num_sims, "5000_sss_6_rounds_sf_600")
+    # reset_counter_stats(players)
+    # testing_single_swiss(num_sims,players,num_rounds,score_factor=450)
+    # results_collation(players,num_sims, "5000_sss_6_rounds_sf_450")
+    # reset_counter_stats(players)
+    # testing_single_swiss(num_sims,players,num_rounds,score_factor=200)
+    # results_collation(players,num_sims, "5000_sss_6_rounds_sf_200")
 
     # num_rounds = 7
     # reset_counter_stats(players)
