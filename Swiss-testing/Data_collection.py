@@ -11,13 +11,13 @@ def even_strength(player_count):
         player_list.append(Player(str=1))
     return player_list
 
-def tilted_strength(player_count, scalar=1):
+def tilted_strength(player_count, scalar=0.5):
     player_list = []
     for _ in range(player_count):
         player_list.append(Player(scaler=scalar))
     player_list.sort(key= lambda player: player.str, reverse=True)
     for i in range(len(player_list)):
-        player_list[i].id = i
+        player_list[i].id = i+1
     return player_list
 
 
@@ -120,9 +120,10 @@ if __name__ == "__main__":
     
     num_rounds = 8
     reset_counter_stats(players)
-    cProfile.run('testing_double_swiss(num_sims,players,num_rounds)',sort='cumulative')
+    testing_double_swiss(num_sims,players,num_rounds)
+    # cProfile.run('testing_double_swiss(num_sims,players,num_rounds)',sort='cumulative')
     
-    # results_collation(players,num_sims, "5000_dss_8_rounds")
+    results_collation(players,num_sims, "100_dss_8_rounds")
 
     # num_rounds = 4
     # reset_counter_stats(players)

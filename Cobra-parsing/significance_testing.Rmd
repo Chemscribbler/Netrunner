@@ -1,0 +1,45 @@
+---
+title: "Significance Testing"
+author: "Jeff Pruyne"
+date: "August 7, 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(broom)
+
+runners <- tibble(
+  id = c("All", "Sunny", "Hoshiko", "Adam", "Leela", "419","Geist","Wu","Valencia", "Lat","MaxX","Freedom"),
+  win_percent = c(.421, .507, .478, .462, .455, .454, .449, .448, .404, .390, .389,.376),
+  games_won = c(2448,38,188,48,255,205,66,26,40,23,28,100),
+  games_played = c(5815,75,393,104,560,452,147,58,99,59,72,266)
+)
+
+glance(binom.test(38,75,.421))
+
+runners %>% 
+  group_by(id) %>% 
+  nest() %>% 
+  mutate(test = map(data, ~binom.test(.x$games_won, .x$games_played, .421)),
+         tidied = map(test, tidy)) %>% 
+  unnest(tidied) %>% 
+  select(id, estimate, p.value) %>% 
+  filter(id != "All")
+
+corps <- tibble(
+  id = c("Titan","Asa", "CtM", "Chronos", "Palana","Outfit","GameNET","AgInf","MM","RP","PE","Argus"),
+  games_won = c(192,209,100,36,96,238,128,49,52,112,34,102),
+  games_played = c(297,334,166,60,160,402,217,84,90,198,63,190)
+)
+
+corps %>% 
+  group_by(id) %>% 
+  nest() %>% 
+  mutate(test = map(data, ~binom.test(.x$games_won, .x$games_played, .579)),
+         tidied = map(test, tidy)) %>% 
+  unnest(tidied) %>% 
+  select(id, estimate, p.value) %>% 
+  filter(id != "All")
+
+```

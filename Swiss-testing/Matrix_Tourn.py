@@ -2,6 +2,7 @@ import Player
 import pandas as pd
 import numpy as np
 import networkx as nx
+from networkx import NetworkXError
 from random import random, randint
 
 class Tourney(object):
@@ -33,7 +34,7 @@ class Tourney(object):
         same_bias = ((df * df.T)> 0)
         np.fill_diagonal(same_bias,0)
         min_bias = np.minimum(abs(df), abs(df.T))
-        return 25*(8**(min_bias*same_bias))
+        return 25*(8**(min_bias))*same_bias
 
     def make_minor_side_penalty_array(self):
         df = np.array([[player.side_balance for player in self.player_dict.values()]])
@@ -43,22 +44,36 @@ class Tourney(object):
     
     def removed_played_edges(self):
         for player in self.player_dict.values():
-            for opponent_id in player.opponent_dict:
-                self.pairing_graph[player.id][opponent_id]['weight']=0
+            # print(f"{player.id}:{player.opponent_dict}")
+            for opponent_id in player.opponent_dict.values():
+                try:
+                    # print(f"Removing {player.id} vs {opponent_id}")
+                    self.pairing_graph[player.id][opponent_id]['weight']=0
+                except:
+                    pass
+                # try:
+                #     self.pairing_graph.remove_edge(player.id, opponent_id)
+                # except NetworkXError:
+                #     pass
 
-    def make_pairings(self,augmented=False):
+    def construct_pairings_matrix(self,augmented=False):
         pairing_matrix = 20000-self.make_score_penalty_array() - self.make_side_penalty_array()
         if augmented:
             pairing_matrix - self.make_minor_side_penalty_array()
-        pairing_matrix += np.random.randint(0,5,size=(len(self.player_dict), len(self.player_dict)))
+        pairing_matrix += np.random.randint(0,10,size=(len(self.player_dict), len(self.player_dict)))
         pairing_matrix = pd.DataFrame(pairing_matrix,
             index=[key for key in self.player_dict.keys()],
             columns =[key for key in self.player_dict.keys()])
+        return pairing_matrix
+
+    def make_pairings(self,**kwargs):
+        pairing_matrix = self.construct_pairings_matrix(**kwargs)  
+
         self.pairing_graph = nx.convert_matrix.from_pandas_adjacency(pairing_matrix)
 
         self.removed_played_edges()
         
-        self.pairings = nx.max_weight_matching(self.pairing_graph)
+        self.pairings = nx.max_weight_matching(self.pairing_graph,maxcardinality=True)
 
         for pair in self.pairings:
             p1 = self.player_dict[pair[0]]
@@ -124,7 +139,7 @@ class Tourney(object):
         for player in self.player_dict.values():
             opponent_total_score = 0
             opponents_games_played = 0
-            for opponent_id in player.opponent_dict:
+            for opponent_id in player.opponent_dict.values() :
                 opponent = self.player_dict[opponent_id]
                 opponent_total_score += opponent.score
                 opponents_games_played += len(opponent.opponent_dict)
