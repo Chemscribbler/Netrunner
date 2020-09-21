@@ -146,7 +146,13 @@ def test_format_correllation(num_sims, dss_rounds=8, sss_rounds=6, num_players=3
         d_error_array.append(d_true_vs_dss[0]-d_true_vs_sss[0])
     
     return d_error_array
-        
+
+def test_round_count_significance(num_sims, num_players=20,round_cap = 20, sss_sf=200, dss=False, shuffle=False):
+    p_values = []
+
+    if not shuffle:
+        players = tilted_strength(num_players)
+
 
 def pair_looper(tourney):
     for pair in tourney.pairings:
@@ -175,35 +181,4 @@ if __name__ == "__main__":
 
     a = test_format_correllation(1000,dss_rounds=3,sss_rounds=4,num_players=test_plr_num,shuffle_plrs=True)
     print(f"Suffled Players {test_plr_num}: Null {percentile(a,2.5) < 0 < percentile(a,97.5)}: {percentile(a,2.5)}, {percentile(a,97.5)}")
-    
-    
-    test_plr_num = 20
-    a = test_format_correllation(1000,num_players=test_plr_num,shuffle_plrs=False)
-    print(f"Unshuffled Players {test_plr_num}: Null {percentile(a,2.5) < 0 < percentile(a,97.5)}: {percentile(a,2.5)}, {percentile(a,97.5)}")
-
-    a = test_format_correllation(1000,num_players=test_plr_num,shuffle_plrs=True)
-    print(f"Suffled Players {test_plr_num}: Null {percentile(a,2.5) < 0 < percentile(a,97.5)}: {percentile(a,2.5)}, {percentile(a,97.5)}")
-
-    test_plr_num = 32
-    a = test_format_correllation(1000,num_players=test_plr_num,shuffle_plrs=False)
-    print(f"Unshuffled Players {test_plr_num}: Null {percentile(a,2.5) < 0 < percentile(a,97.5)}: {percentile(a,2.5)}, {percentile(a,97.5)}")
-
-    a = test_format_correllation(1000,num_players=test_plr_num,shuffle_plrs=True)
-    print(f"Suffled Players {test_plr_num}: Null {percentile(a,2.5) < 0 < percentile(a,97.5)}: {percentile(a,2.5)}, {percentile(a,97.5)}")
-
-    test_plr_num = 64
-    a = test_format_correllation(1000,dss_rounds=12,sss_rounds=10,num_players=test_plr_num,shuffle_plrs=False)
-    print(f"Unshuffled Players {test_plr_num}: Null {percentile(a,2.5) < 0 < percentile(a,97.5)}: {percentile(a,2.5)}, {percentile(a,97.5)}")
-
-    a = test_format_correllation(1000,dss_rounds=12,sss_rounds=10,num_players=test_plr_num,shuffle_plrs=True)
-    print(f"Suffled Players {test_plr_num}: Null {percentile(a,2.5) < 0 < percentile(a,97.5)}: {percentile(a,2.5)}, {percentile(a,97.5)}")
-
-    test_plr_num = 128
-    a = test_format_correllation(1000,dss_rounds=14,sss_rounds=10,num_players=test_plr_num,shuffle_plrs=False)
-    print(f"Unshuffled Players {test_plr_num}: Null {percentile(a,2.5) < 0 < percentile(a,97.5)}: {percentile(a,2.5)}, {percentile(a,97.5)}")
-
-    a = test_format_correllation(1000,dss_rounds=14,sss_rounds=10,num_players=test_plr_num,shuffle_plrs=True)
-    print(f"Suffled Players {test_plr_num}: Null {percentile(a,2.5) < 0 < percentile(a,97.5)}: {percentile(a,2.5)}, {percentile(a,97.5)}")
-
-        
     
