@@ -4,9 +4,9 @@ import csv
 import random
 from Data_collection import tilted_strength, even_strength, rank_results
 from time import time
-import cProfile
+# import cProfile
 import pandas as pd
-from scipy.stats import spearmanr
+from scipy.stats import pearsonr, combine_pvalues
 from numpy import percentile
 
 def construct_tourney(player_list,**kwargs):
@@ -140,18 +140,43 @@ def test_format_correllation(num_sims, dss_rounds=8, sss_rounds=6, num_players=3
             player.finish_two = i+1
         t2_results = [plr.finish_two for plr in plr_list]
         
-        d_true_vs_dss = spearmanr([x+1 for x in range(num_players)],t1_results)
-        d_true_vs_sss = spearmanr([x+1 for x in range(num_players)],t2_results)
+        d_true_vs_dss = pearsonr([x+1 for x in range(num_players)],t1_results)
+        d_true_vs_sss = pearsonr([x+1 for x in range(num_players)],t2_results)
 
         d_error_array.append(d_true_vs_dss[0]-d_true_vs_sss[0])
     
     return d_error_array
 
 def test_round_count_significance(num_sims, num_players=20,round_cap = 20, sss_sf=200, dss=False, shuffle=False):
-    p_values = []
+    p_values_dict = {}
 
     if not shuffle:
-        players = tilted_strength(num_players)
+        plr_list = tilted_strength(num_players)
+        # random.shuffle(plr_list)
+    for r in range(1,round_cap+1):
+        p_values_dict[r] = []
+        for i in range(num_sims):
+            if shuffle:
+                plr_list = tilted_strength(num_players)
+                # random.shuffle(plr_list)
+            else:
+                for plr in plr_list:
+                    plr.reset_stats()
+            t = construct_tourney(plr_list)
+            t.score_factor = sss_sf
+            t.sim_tourney(r,double_sided=dss)
+            results_list =[plr for plr in t.player_dict.values()]
+            random.shuffle(results_list)
+            results_list = rank_list(results_list)
+            for i, player in enumerate(results_list):
+                player.finish = i+1
+            t_results = [plr.finish for plr in plr_list]
+            
+            d_true_vs_tournament = pearsonr([x for x in range(1,num_players+1)], t_results)
+
+            p_values_dict[r].append(d_true_vs_tournament[0])
+    
+    return p_values_dict
 
 
 def pair_looper(tourney):
@@ -159,7 +184,7 @@ def pair_looper(tourney):
         tourney.sim_match(pair)
 
 if __name__ == "__main__":
-    random.seed(a="tec_switch")
+    random.seed()
     # players = tilted_strength(20,0.5)
     # num_sims = 100
 
@@ -175,10 +200,16 @@ if __name__ == "__main__":
     # results_collation(players,num_sims,f"{num_sims}_sss_{num_rounds}_rnds_{len(players)}_plrs_{score_factor}_sf")
     # print((time()-tic)/60.0)
 
-    test_plr_num = 12
-    a = test_format_correllation(1000,dss_rounds=6,sss_rounds=4,num_players=test_plr_num,shuffle_plrs=False)
-    print(f"Unshuffled Players {test_plr_num}: Null {percentile(a,2.5) < 0 < percentile(a,97.5)}: {percentile(a,2.5)}, {percentile(a,97.5)}")
-
-    a = test_format_correllation(1000,dss_rounds=3,sss_rounds=4,num_players=test_plr_num,shuffle_plrs=True)
-    print(f"Suffled Players {test_plr_num}: Null {percentile(a,2.5) < 0 < percentile(a,97.5)}: {percentile(a,2.5)}, {percentile(a,97.5)}")
+    num_players_list = [10,16,20,28,32,40,50,60,80,100,120]
+    cap_rounds_list =  [8, 10,10,12,12,12,14,14,16,18,18]
     
+    for num_plr, rnd_cap in zip(num_players_list,cap_rounds_list):
+        tmr = time()
+        a = test_round_count_significance(100, round_cap= rnd_cap, num_players= num_plr, shuffle=True, dss=True)
+        df = pd.DataFrame.from_dict(a)
+        df.to_csv(f"{num_plr}_dss_players_corr_pearson.csv")
+
+        a = test_round_count_significance(100, round_cap= rnd_cap, num_players= num_plr, shuffle=True, dss=False)
+        df = pd.DataFrame.from_dict(a)
+        df.to_csv(f"{num_plr}_sss_players_corr_pearson.csv")
+        print(f"{(time()-tmr)/60}: {num_plr} with {rnd_cap}")

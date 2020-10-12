@@ -67,51 +67,31 @@ class Tourney(object):
         return pairing_matrix
 
     def check_pairings(self):
-        failed_pairing = False
+        # failed_pairing = False
         for pair in self.pairings:
             p1 = self.player_dict[pair[0]]
             p2 = self.player_dict[pair[1]]
-            if p2.id in p1.opponed_dict.values():
-                for key, value in p1.opponed_dict.items():
-                    if value == pd.id:
-                        old_side_played = p1.side_order[key]
-                        if p1.side_balance * old_side_played > 0:
-                            failed_pairing = True
-                            self.pairing_graph[p1.id][p2.id]["weight"] = 0
-                            break
-                        else:
-                            p1.side = old_side_played*(-1)
-                            p2.side = old_side_played
-            if failed_pairing:
-                break
-            
-            else:
-                if p1.side_balance == p2.side_balance:
-                    random_flip = randint(0,1)
-                    if random_flip == 0:
-                        random_flip = -1
-                    p1.side = random_flip
-                    p2.side = random_flip * -1
+            if p1.side_balance == p2.side_balance:
+                random_flip = randint(0,1)
+                if random_flip == 0:
+                    random_flip = -1
+                p1.side = random_flip
+                p2.side = random_flip * -1
 
+            else:
+                if p1.side_balance < p2.side_balance:
+                    p1.side = 1
+                    p2.side = -1
                 else:
-                    if p1.side_balance < p2.side_balance:
-                        p1.side = 1
-                        p2.side = -1
-                    else:
-                        p1.side = -1
-                        p2.side = 1
-        
-        if failed_pairing:
-            self.pairings = nx.max_weight_matching(self.pairing_graph,maxcardinality=True)
-            self.check_pairings()
+                    p1.side = -1
+                    p2.side = 1
 
 
     def make_pairings(self,allow_rematch=False,**kwargs):
         pairing_matrix = self.construct_pairings_matrix(**kwargs)  
 
         self.pairing_graph = nx.convert_matrix.from_pandas_adjacency(pairing_matrix)
-        if not allow_rematch:
-            self.removed_played_edges()
+        self.removed_played_edges()
         
         self.pairings = nx.max_weight_matching(self.pairing_graph,maxcardinality=True)
 
