@@ -1,0 +1,43 @@
+Runner Wins: 28.0 45.16129032258064% 	Corp Wins: 34.0 54.83870967741935%
+Leela Patel: Trained Pragmatist:	7:279	2.0%
+Armand "Geist" Walker: Tech Lord:	5:108	4.0%
+Valencia Estevez: The Angel of Cayambe:	4:77	5.0%
+Hayley Kaplan: Universal Scholar:	3:96	3.0%
+Hoshiko Shiro: Untold Protagonist:	2:146	1.0%
+Ele "Smoke" Scovak: Cynosure of the Net:	2:54	4.0%
+419: Amoral Scammer:	1:61	2.0%
+Freedom Khumalo: Crypto-Anarchist:	1:70	1.0%
+Kabonesa Wu: Netspace Thrillseeker:	1:6	14.0%
+Adam: Compulsive Hacker:	1:69	1.0%
+MaxX: Maximum Punk Rock:	1:13	7.0%
+Alice Merchant: Clan Agitator:	0:7	0.0%
+Lat: Ethical Freelancer:	0:21	0.0%
+Az McCaffrey: Mechanical Prodigy:	0:7	0.0%
+Omar Keung: Conspiracy Theorist:	0:7	0.0%
+Rielle "Kit" Peddler: Transhuman:	0:21	0.0%
+Ken "Express" Tenma: Disappeared Clone:	0:41	0.0%
+Chaos Theory: Wünderkind:	0:7	0.0%
+Edward Kim: Humanity's Hammer:	0:13	0.0%
+Sunny Lebeau: Security Specialist:	0:13	0.0%
+Asa Group: Security Through Vigilance:	13:195	6.0%
+Pālanā Foods: Sustainable Growth:	8:256	3.0%
+Titan Transnational: Investing In Your Future:	3:109	3.0%
+Sportsmetal: Go Big or Go Home:	2:50	4.0%
+Argus Security: Protection Guaranteed:	2:101	2.0%
+Haas-Bioroid: Architects of Tomorrow:	2:5	29.0%
+AgInfusion: New Miracles for a New World:	1:91	1.0%
+NBN: Controlling the Message:	1:19	5.0%
+Tennin Institute: The Secrets Within:	1:6	14.0%
+Earth Station: SEA Headquarters:	1:13	7.0%
+Blue Sun: Powering the Future:	0:21	0.0%
+SYNC: Everything, Everywhere:	0:7	0.0%
+MirrorMorph: Endless Iteration:	0:14	0.0%
+Jinteki: Replicating Perfection:	0:35	0.0%
+Jinteki: Personal Evolution:	0:56	0.0%
+The Outfit: Family Owned and Operated:	0:69	0.0%
+Haarpsichord Studios: Entertainment Unleashed:	0:7	0.0%
+Jemison Astronautics: Sacrifice. Audacity. Success.:	0:14	0.0%
+SSO Industries: Fueling Innovation:	0:14	0.0%
+Hyoubu Institute: Absolute Clarity:	0:7	0.0%
+Weyland Consortium: Builder of Nations:	0:14	0.0%
+Saraswati Mnemonics: Endless Exploration:	0:7	0.0%

@@ -1,0 +1,43 @@
+Runner Wins: 322.0 42.592592592592595% 	Corp Wins: 434.0 57.407407407407405%
+Leela Patel: Trained Pragmatist:	84:125	40.0%
+Hoshiko Shiro: Untold Protagonist:	67:88	43.0%
+Freedom Khumalo: Crypto-Anarchist:	33:39	46.0%
+Hayley Kaplan: Universal Scholar:	33:30	52.0%
+419: Amoral Scammer:	15:13	54.0%
+Valencia Estevez: The Angel of Cayambe:	13:15	46.0%
+Armand "Geist" Walker: Tech Lord:	12:18	40.0%
+Adam: Compulsive Hacker:	11:14	44.0%
+MaxX: Maximum Punk Rock:	10:18	36.0%
+Lat: Ethical Freelancer:	7:13	35.0%
+Edward Kim: Humanity's Hammer:	6:10	38.0%
+Rielle "Kit" Peddler: Transhuman:	6:22	21.0%
+Ken "Express" Tenma: Disappeared Clone:	4:3	57.0%
+Sunny Lebeau: Security Specialist:	4:11	27.0%
+Alice Merchant: Clan Agitator:	4:3	57.0%
+Kabonesa Wu: Netspace Thrillseeker:	3:4	43.0%
+Omar Keung: Conspiracy Theorist:	3:4	43.0%
+Ele "Smoke" Scovak: Cynosure of the Net:	3:11	21.0%
+Nathaniel "Gnat" Hall: One-of-a-Kind:	3:2	60.0%
+Jesminder Sareen: Girl Behind the Curtain:	1:4	20.0%
+Laramy Fisk: Savvy Investor:	0:7	0.0%
+Asa Group: Security Through Vigilance:	84:61	58.0%
+Pālanā Foods: Sustainable Growth:	67:47	59.0%
+Titan Transnational: Investing In Your Future:	45:27	62.0%
+AgInfusion: New Miracles for a New World:	38:33	54.0%
+Sportsmetal: Go Big or Go Home:	34:30	53.0%
+The Outfit: Family Owned and Operated:	34:27	56.0%
+Argus Security: Protection Guaranteed:	23:19	55.0%
+NBN: Controlling the Message:	20:15	57.0%
+Jinteki: Personal Evolution:	16:5	76.0%
+Jinteki: Replicating Perfection:	12:8	60.0%
+Acme Consulting: The Truth You Need:	11:10	52.0%
+MirrorMorph: Endless Iteration:	10:11	48.0%
+Chronos Protocol: Selective Mind-mapping:	9:5	64.0%
+Saraswati Mnemonics: Endless Exploration:	7:7	50.0%
+Earth Station: SEA Headquarters:	6:8	43.0%
+Weyland Consortium: Builder of Nations:	5:2	71.0%
+Blue Sun: Powering the Future:	4:3	57.0%
+SYNC: Everything, Everywhere:	3:9	25.0%
+Weyland Consortium: Building a Better World:	2:4	33.0%
+Jinteki Biotech: Life Imagined:	2:5	29.0%
+GameNET: Where Dreams are Real:	2:6	25.0%

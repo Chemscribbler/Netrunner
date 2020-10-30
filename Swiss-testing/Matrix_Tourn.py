@@ -34,7 +34,7 @@ class Tourney(object):
         same_bias = ((df * df.T)> 0)
         np.fill_diagonal(same_bias,0)
         min_bias = np.minimum(abs(df), abs(df.T))
-        return 25*(8**(min_bias))*same_bias
+        return (8**(min_bias))*same_bias
 
     def make_minor_side_penalty_array(self):
         df = np.array([[player.side_balance for player in self.player_dict.values()]])

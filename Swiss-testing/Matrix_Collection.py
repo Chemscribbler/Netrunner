@@ -2,12 +2,32 @@ from Matrix_Tourn import Tourney
 from Player import Player
 import csv
 import random
-from Data_collection import tilted_strength, even_strength, rank_results
+# from Data_collection import tilted_strength, even_strength, rank_results
 from time import time
 # import cProfile
 import pandas as pd
 from scipy.stats import pearsonr, combine_pvalues
 from numpy import percentile
+
+def even_strength(player_count):
+    player_list = []
+    for _ in range(player_count):
+        player_list.append(Player(str=1))
+    return player_list
+
+def tilted_strength(player_count, scalar=0.5):
+    player_list = []
+    for _ in range(player_count):
+        player_list.append(Player(scaler=scalar))
+    player_list.sort(key= lambda player: player.str, reverse=True)
+    for i in range(len(player_list)):
+        player_list[i].id = i+1
+    return player_list
+
+def rank_results(tournament):
+    tournament.player_list.sort(key= lambda player: player.sos, reverse=True)
+    tournament.player_list.sort(key = lambda player: player.score, reverse=True)
+    return tournament.player_list
 
 def construct_tourney(player_list,**kwargs):
     t = Tourney()
@@ -90,22 +110,22 @@ def collect_across_distribution(player_count, num_plr_dist, num_sims, file_name,
         players = player_dist(player_count)
 
         reset_counter_stats(players)
-        test_tournament_conditions(num_sims, players, num_rounds=dss_rounds, double_sided=True, score_factor=75,verbose=verbose)
+        test_tournament_conditions(num_sims, players, num_rounds=dss_rounds, double_sided=True, score_factor=3,verbose=verbose)
         temp_df = pd.DataFrame([plr.finish for plr in players]).T
         df_dss += temp_df
 
         reset_counter_stats(players)
-        test_tournament_conditions(num_sims, players, num_rounds=sss_rounds, score_factor=75,verbose=verbose)
+        test_tournament_conditions(num_sims, players, num_rounds=sss_rounds, score_factor=3,verbose=verbose)
         temp_df = pd.DataFrame([plr.finish for plr in players]).T
         df_sss_75 += temp_df
 
         reset_counter_stats(players)
-        test_tournament_conditions(num_sims, players, num_rounds=sss_rounds, score_factor=200,verbose=verbose)
+        test_tournament_conditions(num_sims, players, num_rounds=sss_rounds, score_factor=8,verbose=verbose)
         temp_df = pd.DataFrame([plr.finish for plr in players]).T
         df_sss_200 += temp_df
 
         reset_counter_stats(players)
-        test_tournament_conditions(num_sims, players, num_rounds=sss_rounds, score_factor=600,verbose=verbose)
+        test_tournament_conditions(num_sims, players, num_rounds=sss_rounds, score_factor=24,verbose=verbose)
         temp_df = pd.DataFrame([plr.finish for plr in players]).T
         df_sss_600 += temp_df
 
@@ -186,13 +206,15 @@ def pair_looper(tourney):
 if __name__ == "__main__":
     random.seed()
     # players = tilted_strength(20,0.5)
+    
+    # players = 32
     # num_sims = 100
 
-    # a = collect_across_distribution(32,50,100,"test",6,8,tilted_strength,verbose=False)
-    # list_names = ['dss', '75_sss', '200_sss', '600_sss']
-    # for item, name in zip(a,list_names):
-    #     item.to_csv(f"{name}.csv")
-    # tic = time()
+    a = collect_across_distribution(32,50,100,"test",6,8,tilted_strength,verbose=False)
+    list_names = ['dss', '3_sss', '8_sss', '24_sss']
+    for item, name in zip(a,list_names):
+        item.to_csv(f"{name}.csv")
+    tic = time()
     # score_factor = 75
     # num_rounds = 6
     # reset_counter_stats(players)
@@ -200,16 +222,16 @@ if __name__ == "__main__":
     # results_collation(players,num_sims,f"{num_sims}_sss_{num_rounds}_rnds_{len(players)}_plrs_{score_factor}_sf")
     # print((time()-tic)/60.0)
 
-    num_players_list = [10,16,20,28,32,40,50,60,80,100,120]
-    cap_rounds_list =  [8, 10,10,12,12,12,14,14,16,18,18]
+    # num_players_list = [10,16,20,28,32,40,50,60,80,100,120]
+    # cap_rounds_list =  [8, 10,10,12,12,12,14,14,16,18,18]
     
-    for num_plr, rnd_cap in zip(num_players_list,cap_rounds_list):
-        tmr = time()
-        a = test_round_count_significance(100, round_cap= rnd_cap, num_players= num_plr, shuffle=True, dss=True)
-        df = pd.DataFrame.from_dict(a)
-        df.to_csv(f"{num_plr}_dss_players_corr_pearson.csv")
+    # for num_plr, rnd_cap in zip(num_players_list,cap_rounds_list):
+    #     tmr = time()
+    #     a = test_round_count_significance(100, round_cap= rnd_cap, num_players= num_plr, shuffle=True, dss=True)
+    #     df = pd.DataFrame.from_dict(a)
+    #     df.to_csv(f"{num_plr}_dss_players_corr_pearson.csv")
 
-        a = test_round_count_significance(100, round_cap= rnd_cap, num_players= num_plr, shuffle=True, dss=False)
-        df = pd.DataFrame.from_dict(a)
-        df.to_csv(f"{num_plr}_sss_players_corr_pearson.csv")
-        print(f"{(time()-tmr)/60}: {num_plr} with {rnd_cap}")
+    #     a = test_round_count_significance(100, round_cap= rnd_cap, num_players= num_plr, shuffle=True, dss=False)
+    #     df = pd.DataFrame.from_dict(a)
+    #     df.to_csv(f"{num_plr}_sss_players_corr_pearson.csv")
+    #     print(f"{(time()-tmr)/60}: {num_plr} with {rnd_cap}")

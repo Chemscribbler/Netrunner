@@ -12,7 +12,7 @@ runnerScore = 0
 corpScore = 0
 
 
-with open(results_file_path,"w") as results_file:
+with open(results_file_path,"w",encoding='utf8') as results_file:
     for data_round in cobrai_data["rounds"]:
         for table in data_round:
             if not table["eliminationGame"]:

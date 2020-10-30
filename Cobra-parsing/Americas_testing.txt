@@ -1,0 +1,48 @@
+Runner Wins: 344.0 41.84914841849148% 	Corp Wins: 478.0 58.15085158150851%
+Leela Patel: Trained Pragmatist:	85:137	38.0%
+Hoshiko Shiro: Untold Protagonist:	49:72	40.0%
+Freedom Khumalo: Crypto-Anarchist:	34:55	38.0%
+419: Amoral Scammer:	34:48	41.0%
+Hayley Kaplan: Universal Scholar:	28:38	42.0%
+Armand "Geist" Walker: Tech Lord:	25:31	45.0%
+Adam: Compulsive Hacker:	12:15	44.0%
+Valencia Estevez: The Angel of Cayambe:	11:10	52.0%
+Kabonesa Wu: Netspace Thrillseeker:	10:14	42.0%
+MaxX: Maximum Punk Rock:	9:12	43.0%
+Edward Kim: Humanity's Hammer:	9:11	45.0%
+Rielle "Kit" Peddler: Transhuman:	8:12	40.0%
+Sunny Lebeau: Security Specialist:	8:13	38.0%
+Omar Keung: Conspiracy Theorist:	5:5	50.0%
+Iain Stirling: Retired Spook:	4:3	57.0%
+Alice Merchant: Clan Agitator:	3:2	60.0%
+Los: Data Hijacker:	2:5	29.0%
+Quetzal: Free Spirit:	2:5	29.0%
+Nathaniel "Gnat" Hall: One-of-a-Kind:	2:3	40.0%
+Lat: Ethical Freelancer:	1:6	14.0%
+Ele "Smoke" Scovak: Cynosure of the Net:	1:4	20.0%
+Ken "Express" Tenma: Disappeared Clone:	1:13	7.0%
+Az McCaffrey: Mechanical Prodigy:	1:6	14.0%
+Reina Roja: Freedom Fighter:	0:3	0.0%
+The Outfit: Family Owned and Operated:	91:74	55.0%
+NBN: Controlling the Message:	50:29	63.0%
+GameNET: Where Dreams are Real:	44:41	52.0%
+Titan Transnational: Investing In Your Future:	43:31	58.0%
+Asa Group: Security Through Vigilance:	41:18	69.0%
+Jinteki: Replicating Perfection:	34:19	64.0%
+Pālanā Foods: Sustainable Growth:	32:22	59.0%
+Sportsmetal: Go Big or Go Home:	25:28	47.0%
+Argus Security: Protection Guaranteed:	17:18	49.0%
+AgInfusion: New Miracles for a New World:	14:16	47.0%
+SYNC: Everything, Everywhere:	12:9	57.0%
+Jemison Astronautics: Sacrifice. Audacity. Success.:	12:8	60.0%
+Jinteki: Personal Evolution:	11:10	52.0%
+MirrorMorph: Endless Iteration:	10:4	71.0%
+Chronos Protocol: Selective Mind-mapping:	10:9	53.0%
+Saraswati Mnemonics: Endless Exploration:	8:13	38.0%
+Acme Consulting: The Truth You Need:	5:8	38.0%
+Haarpsichord Studios: Entertainment Unleashed:	4:3	57.0%
+Tennin Institute: The Secrets Within:	4:3	57.0%
+Weyland Consortium: Building a Better World:	4:9	31.0%
+SSO Industries: Fueling Innovation:	3:4	43.0%
+Earth Station: SEA Headquarters:	3:9	25.0%
+Blue Sun: Powering the Future:	1:4	20.0%
