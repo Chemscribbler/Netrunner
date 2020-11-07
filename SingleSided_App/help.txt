@@ -7,7 +7,7 @@ m.start_tournament() will start the tournament, after that point players cannot 
 
 To report results type
 
-m.report_result(player_one_id, player_two_id, player_one_score, player_two_score)
+m.record_result(player_one_id, player_two_id, player_one_score, player_two_score)
 
 At the end of the round type
 m.finish_round()

@@ -210,5 +210,5 @@ if __name__ == "__main__":
     t_name =input("Tournament Name: ")
     m.create_tournament(t_name)
     print("Add players by typing m.add_player('#NAME'), when finished type m.start_tournament()")
-    print("Report results with m.report_result(...) and finish a round with m.finish_round()")
+    print("Report results with m.record_result(...) and finish a round with m.finish_round()")
     print("Type m.help() for more directions, or help(m.command())")
