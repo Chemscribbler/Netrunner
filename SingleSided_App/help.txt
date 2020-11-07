@@ -1,0 +1,19 @@
+This is the help text. See it at any time by typing "m.help()"
+All commands here are prefaced with "m." so that python knows you're working with the manager
+
+To add players type m.add_player('Name')- the quotes are mandatory
+
+m.start_tournament() will start the tournament, after that point players cannot be added
+
+To report results type
+
+m.report_result(player_one_id, player_two_id, player_one_score, player_two_score)
+
+At the end of the round type
+m.finish_round()
+This will automatically pair the next round
+You can also use two optional arguments, pair_next, and display_rankings (bothe default to True)
+
+Finally 
+m.backup()
+saves a csv with the current standings, and a separate sheet for each player with their match history

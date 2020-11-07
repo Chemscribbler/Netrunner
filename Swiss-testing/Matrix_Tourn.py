@@ -10,7 +10,7 @@ class Tourney(object):
     def __init__(self):
         self.player_dict = {}
         self.round = 0
-        self.score_factor = 200
+        self.score_factor = 3
         self.pairing_graph = nx.Graph()
         self.pairings = []
 
@@ -35,12 +35,6 @@ class Tourney(object):
         np.fill_diagonal(same_bias,0)
         min_bias = np.minimum(abs(df), abs(df.T))
         return (8**(min_bias))*same_bias
-
-    def make_minor_side_penalty_array(self):
-        df = np.array([[player.side_balance for player in self.player_dict.values()]])
-        max_bias = np.maximum(abs(df), abs(df.T))
-        np.fill_diagonal(max_bias,0)
-        return 5*(max_bias)
     
     def removed_played_edges(self):
         for player in self.player_dict.values():
@@ -56,18 +50,15 @@ class Tourney(object):
                 # except NetworkXError:
                 #     pass
 
-    def construct_pairings_matrix(self,augmented=False):
-        pairing_matrix = 20000-self.make_score_penalty_array() - self.make_side_penalty_array()
-        if augmented:
-            pairing_matrix - self.make_minor_side_penalty_array()
-        pairing_matrix += np.random.randint(0,10,size=(len(self.player_dict), len(self.player_dict)))
+    def construct_pairings_matrix(self):
+        pairing_matrix = 1000-self.make_score_penalty_array() - self.make_side_penalty_array()
+        pairing_matrix += np.random.random(0,1,size=(len(self.player_dict), len(self.player_dict)))
         pairing_matrix = pd.DataFrame(pairing_matrix,
             index=[key for key in self.player_dict.keys()],
             columns =[key for key in self.player_dict.keys()])
         return pairing_matrix
 
-    def check_pairings(self):
-        # failed_pairing = False
+    def assign_sides(self):
         for pair in self.pairings:
             p1 = self.player_dict[pair[0]]
             p2 = self.player_dict[pair[1]]
@@ -95,7 +86,7 @@ class Tourney(object):
         
         self.pairings = nx.max_weight_matching(self.pairing_graph,maxcardinality=True)
 
-        self.check_pairings()
+        self.assign_sides()
         
 
     def sim_match(self, pair):

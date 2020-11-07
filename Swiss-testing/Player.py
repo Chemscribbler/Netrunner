@@ -34,6 +34,8 @@ class Player():
         self.off_pair = 0
         self.pairing_diff = 0
 
+        self.round_dictionary = {}
+
 
     def __repr__(self):
         return f"PID{self.id}"
