@@ -56,6 +56,8 @@ class Manager(object):
         """
         players = self.active_tournament.player_dict.values()
         plr_list = [plr for plr in players]
+        for plr in self.active_tournament.dropped_players.items():
+            plr_list.append(plr)
         plr_list.sort(key = lambda player: player.sos, reverse=True)
         plr_list.sort(key = lambda player: player.score, reverse=True)
         for plr in plr_list:

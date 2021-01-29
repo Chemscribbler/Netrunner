@@ -16,6 +16,7 @@ class Tournament(object):
         self.win_points = 3
         self.tie_points = 1
         self.pairings_done = False
+        self.dropped_players = {}
 
     def add_player(self, player):
         if self.round != 0:
@@ -118,4 +119,11 @@ class Tournament(object):
             p1.record_pairing(p2.id, p1_side, self.round)
             p2.record_pairing(p1.id, p2_side, self.round)
             
-            
+
+    def drop_player(self, player_name):
+        for i, v in self.player_dict.items():
+            if v.name == player_name:
+                del self.player_dict[i]
+                self.dropped_players[v.id] = v
+                return True
+        raise ValueError(f"{player_name} does not seem to be in the tournament")
