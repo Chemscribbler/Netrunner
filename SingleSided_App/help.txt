@@ -12,7 +12,7 @@ m.record_result(player_one_id, player_two_id, player_one_score, player_two_score
 At the end of the round type
 m.finish_round()
 This will automatically pair the next round
-You can also use two optional arguments, pair_next, and display_rankings (bothe default to True)
+You can also use two optional arguments, pair_next, and display_rankings (both default to True)
 
 Finally 
 m.backup()
