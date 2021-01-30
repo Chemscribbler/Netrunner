@@ -221,6 +221,16 @@ class Manager(object):
         for i in range(count):
             self.add_player(name_list[i])
 
+    def sim_round(self):
+        for pair in self.active_tournament.pairings:
+            if pair[0] * pair[1] < 0:
+                if pair[0] == -1:
+                    self.record_result(pair[0], pair[1], 0, 3)
+                else:
+                    self.record_result(pair[0], pair[1], 3, 0)
+            self.record_result(pair[0], pair[1], 3, 0)
+
+
     def help(self):
         with open("help.txt", 'r') as f:
             print(f.read())
