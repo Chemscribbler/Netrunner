@@ -6,3 +6,4 @@ SingleSided_App/__pycache__/*
 Swiss-testing/blog_data
 .gitignore
 .DS_Store
+*.pyc
