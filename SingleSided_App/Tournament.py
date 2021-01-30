@@ -125,5 +125,10 @@ class Tournament(object):
             if v.name == player_name:
                 del self.player_dict[i]
                 self.dropped_players[v.id] = v
+                if len(self.player_dict) % 2 == 1:
+                    try:
+                        del self.player_dict[-1]
+                    except KeyError:
+                        self.add_bye_player()
                 return True
         raise ValueError(f"{player_name} does not seem to be in the tournament")

@@ -192,7 +192,7 @@ class Manager(object):
         with open(f"{self.active_tournament_key}.csv",'w',newline='') as csvfile:
             rank_writer = csv.writer(csvfile)
             players = self.active_tournament.player_dict.values()
-            plr_list = [plr for plr in players]
+            plr_list = [plr for plr in players if plr.name != "Bye"]
             plr_list.sort(key = lambda player: player.sos, reverse=True)
             plr_list.sort(key = lambda player: player.score, reverse=True)
             for entry in plr_list:
