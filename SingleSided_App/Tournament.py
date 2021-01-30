@@ -124,12 +124,15 @@ class Tournament(object):
         try:
             del self.player_dict[player.id]
             self.dropped_players[player.id] = player
-            try:
-                del self.player_dict[-1]
-            except KeyError:
-                self.add_bye_player()
-            return True
-        except ValueError:
-            print(f"{player_name} does not seem to be in the tournament")
+            if self.round > 0:
+                try:
+                    del self.player_dict[-1]
+                except KeyError:
+                    self.add_bye_player()
+                return True
+            else:
+                return True
+        except (KeyError, AttributeError):
+            print(f"{player} does not seem to be in the tournament")
             return False
             

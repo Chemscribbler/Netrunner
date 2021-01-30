@@ -38,10 +38,13 @@ class Manager(object):
         returns true if successful
         """
         player = None
-        for plr in self.active_tournament.player_dict.items:
+        for plr in self.active_tournament.player_dict.values():
             if plr.name == player_name:
                 player = plr
                 break
+        if not player:
+            print(f"{player_name} is not in the current list")
+            return False
         return self.active_tournament.drop_player(player)
         
 
@@ -71,7 +74,7 @@ class Manager(object):
         """
         players = self.active_tournament.player_dict.values()
         plr_list = [plr for plr in players]
-        for plr in self.active_tournament.dropped_players.items():
+        for plr in self.active_tournament.dropped_players.values():
             plr_list.append(plr)
         plr_list.sort(key = lambda player: player.sos, reverse=True)
         plr_list.sort(key = lambda player: player.score, reverse=True)

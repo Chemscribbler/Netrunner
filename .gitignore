@@ -1,5 +1,6 @@
 .vscode/launch.json
 Swiss-testing/__pycache__/*
+SingleSided_App/__pycache__/*
 *.csv
 *.xlsx
 Swiss-testing/blog_data
