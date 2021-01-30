@@ -120,15 +120,16 @@ class Tournament(object):
             p2.record_pairing(p1.id, p2_side, self.round)
             
 
-    def drop_player(self, player_name):
-        for i, v in self.player_dict.items():
-            if v.name == player_name:
-                del self.player_dict[i]
-                self.dropped_players[v.id] = v
-                if len(self.player_dict) % 2 == 1:
-                    try:
-                        del self.player_dict[-1]
-                    except KeyError:
-                        self.add_bye_player()
-                return True
-        raise ValueError(f"{player_name} does not seem to be in the tournament")
+    def drop_player(self, player):
+        try:
+            del self.player_dict[player.id]
+            self.dropped_players[player.id] = player
+            try:
+                del self.player_dict[-1]
+            except KeyError:
+                self.add_bye_player()
+            return True
+        except ValueError:
+            print(f"{player_name} does not seem to be in the tournament")
+            return False
+            

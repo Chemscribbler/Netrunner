@@ -24,12 +24,27 @@ class Manager(object):
         self.active_tournament = self.tournament_dict[id]
         self.active_tournament_key = id
     
-    def add_player(self, plr_name):
+    def add_player(self, plr_name, **kwargs):
         """
         Add a player to the active tournament, names must be unique
         """
-        plr = Player(plr_name)
+        plr = Player(plr_name, **kwargs)
         self.active_tournament.add_player(plr)
+
+    def drop_player(self, player_name):
+        """
+        Drop a player from the active tournament and add/remove a bye player as needed
+        player_name: The text name for the player
+        returns true if successful
+        """
+        player = None
+        for plr in self.active_tournament.player_dict.items:
+            if plr.name == player_name:
+                player = plr
+                break
+        return self.active_tournament.drop_player(player)
+        
+
     
     def start_tournament(self):
         """
