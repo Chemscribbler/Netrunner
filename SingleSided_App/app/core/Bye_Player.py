@@ -1,4 +1,4 @@
-from Player import Player
+from ..core.Player import Player
 
 class Bye_Player(Player):
     def __init__(self):

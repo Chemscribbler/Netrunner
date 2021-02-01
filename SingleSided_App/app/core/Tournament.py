@@ -1,5 +1,5 @@
-import Player
-import Bye_Player
+from ..core.Player import Player
+from ..core.Bye_Player import Bye_Player
 import pandas as pd
 import numpy as np
 import networkx as nx

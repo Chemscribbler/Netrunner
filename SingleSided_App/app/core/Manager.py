@@ -1,5 +1,5 @@
-from Player import Player
-import Tournament
+from ..core.Player import Player
+from ..core.Tournament import Tournament
 import csv
 
 
@@ -20,7 +20,7 @@ class Manager(object):
         except KeyError:
             pass
 
-        self.tournament_dict[id] = Tournament.Tournament()
+        self.tournament_dict[id] = Tournament()
         self.active_tournament = self.tournament_dict[id]
         self.active_tournament_key = id
     
