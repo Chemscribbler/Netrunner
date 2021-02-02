@@ -3,11 +3,11 @@ from tkinter import *
 
 
 class New_Tournament_Popup(ttk.Frame):
-    def __init__(self, root, manager, t_name):
+    def __init__(self, root, content_manager):
         Frame.__init__(self,root)
         self.root = root
-        self.manager = manager
-        self.t_name = t_name
+        self.content_manager = content_manager
+        self.tour_manager = self.content_manager.manager
         self.window = Toplevel(root)
         mainframe = ttk.Frame(root, padding="3 3 12 12")
         mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
@@ -32,8 +32,8 @@ class New_Tournament_Popup(ttk.Frame):
         ttk.Button(mainframe,command=self.score_factor_explainer, text="?").grid(column=3,row=1)
         
         #Tournament Type Selection
-        self.t_type = BooleanVar()
-        ttk.Label(mainframe,text="Single Sided or Doublesided (DSS not implemented)").grid(column=1,row=2)
+        self.t_type = BooleanVar(value=True)
+        ttk.Label(mainframe,text="Single Sided (DSS not implemented)").grid(column=1,row=2)
         ttk.Checkbutton(mainframe,variable=self.t_type).grid(column=2,row=2,sticky=W)
 
         #Tournament Name
@@ -56,9 +56,10 @@ class New_Tournament_Popup(ttk.Frame):
         button.pack()
 
     def make_tournament(self):
-        self.manager.create_tournament(self.t_name.get())
-        print(self.manager.active_tournament_key)
-        self.manager.active_tournament.score_factor = self.score_factor.get()
+        self.tour_manager.create_tournament(self.t_name.get())
+        print(f"Key: {self.tour_manager.active_tournament_key}, Score Factor: {self.tour_manager.active_tournament.score_factor}")
+        self.tour_manager.active_tournament.score_factor = self.score_factor.get()
+        self.content_manager.frames["TNameFrame"].T_Name.set(self.t_name.get())
         self.window.destroy()
 
     def score_factor_explainer(self):
