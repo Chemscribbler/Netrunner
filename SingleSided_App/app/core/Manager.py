@@ -250,6 +250,9 @@ class Manager(object):
                         continue
                 opponent_total_score += opponent.score
                 opponents_games_played += len(opponent.round_dict)
+            if opponents_games_played == 0:
+                #Handling div by 0 issues
+                opponents_games_played = 1
             player.sos = opponent_total_score/opponents_games_played
 
     def compute_ext_sos(self):
@@ -267,6 +270,9 @@ class Manager(object):
                         continue
                 opponents_total_sos += opponent.score
                 opponents_games_played += len(opponent.round_dict)
+            if opponents_games_played == 0:
+                #Handling div by 0 issues
+                opponents_games_played = 1
             player.ext_sos = opponents_total_sos/opponents_games_played
 
 
