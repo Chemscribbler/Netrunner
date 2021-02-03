@@ -1,9 +1,12 @@
 .vscode/launch.json
-Swiss-testing/__pycache__/*
-SingleSided_App/__pycache__/*
 *.csv
 *.xlsx
 Swiss-testing/blog_data
 .gitignore
 .DS_Store
 *.pyc
+*__pycache__*
+SingleSided_App/app/gui/test.py
+SingleSided_App/build
+SingleSided_App/dist/sass
+SingleSided_App/__pycache__
