@@ -1,15 +1,16 @@
 from tkinter import ttk
-from tkinter import *
+import tkinter as tk
+from tkinter import (N, W, E, S, BooleanVar, StringVar, IntVar)
 from ..gui.pairings import PairingsFrame
 from ..gui.rankings import RankingFrame
 
 class New_Tournament_Popup(ttk.Frame):
     def __init__(self, root, content_manager):
-        Frame.__init__(self,root)
+        tk.Frame.__init__(self,root)
         self.root = root
         self.content_manager = content_manager
         self.tour_manager = self.content_manager.manager
-        self.window = Toplevel(root)
+        self.window = tk.Toplevel(root)
         self.window.title("Make New Tournament")
 
         mainframe = ttk.Frame(self.window, padding="3 3 12 12")
@@ -49,8 +50,8 @@ class New_Tournament_Popup(ttk.Frame):
         root.bind("<Return>", self.donothing)
 
     def donothing(self):
-        filewin = Toplevel(self.root)
-        button = Button(filewin, text="Do nothing button")
+        filewin = tk.Toplevel(self.root)
+        button = ttk.Button(filewin, text="Do nothing button")
         button.pack()
 
     def make_tournament(self):
@@ -69,8 +70,8 @@ class New_Tournament_Popup(ttk.Frame):
         self.window.destroy()
 
     def score_factor_explainer(self):
-        exp_win = Toplevel(self.root)
-        text = Text(exp_win,wrap="word",width=120)
+        exp_win = tk.Toplevel(self.root)
+        text = tk.Text(exp_win,wrap="word",width=120)
         text.grid(column=1, row=1)
         text.insert('1.0',
 "Score factor affects how many prestige up/down the algorithm will\
