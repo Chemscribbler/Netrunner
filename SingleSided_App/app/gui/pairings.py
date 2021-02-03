@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import (ttk, VERTICAL,N,S)
 class PairingsFrame(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__()
@@ -45,7 +45,10 @@ class PairingsFrame(tk.Frame):
         
         self.pairings_table.grid(column=1,row=2)
 
+        self.scrollbar = tk.Scrollbar(self,orient=VERTICAL,command=tree.yview)
+        self.scrollbar.grid(column=5,row=1,rowspan=2, sticky=(N,S))
 
+        #Buttons for score entry
         result_frame = self.result_entry_frame = tk.Frame(self)
         result_frame.grid(column=1,row=3)
         self.c_win_button = ttk.Button(result_frame, text='Corp Win',command=self.select_corp_win)
