@@ -1,14 +1,16 @@
 import tkinter as tk
-from tkinter import (ttk, VERTICAL,N,S)
+from tkinter import (ttk, VERTICAL,N,S,E,W)
 class PairingsFrame(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__()
         self.controller = controller
-        self.grid(column=1,row=3)
+        self.grid(column=1,row=3,sticky=(N,S,E,W))
         self['padx'] = 10
         self['pady'] = 10
-        self.grid_rowconfigure(0,weight=1)
-        self.grid_rowconfigure(0,weight=1)
+        self.grid_columnconfigure(1,weight=1)
+        self.grid_rowconfigure(1,weight=1)
+        self.grid_rowconfigure(2,weight=10)
+        self.grid_rowconfigure(3,weight=1)
         # self.grid(column=1,row=3)
         
         #Buttons for round management
@@ -32,6 +34,7 @@ class PairingsFrame(tk.Frame):
         #Treeview for Displaying Pairings
         pairing_columns = ['Table','Corp Player','C Points','Runner Player','R Points','C_plr_obj','R_plr_obj']
         tree = self.pairings_table = ttk.Treeview(self,selectmode='browse')
+        tree.grid(column=1,row=2,sticky=(N,S,E,W))
         tree['columns'] = pairing_columns
         tree['displaycolumns']=pairing_columns[:5]
         
@@ -43,10 +46,10 @@ class PairingsFrame(tk.Frame):
         tree.column('C Points',width=60)
         tree.column('R Points',width=60)
         
-        self.pairings_table.grid(column=1,row=2)
+        
 
         self.scrollbar = tk.Scrollbar(self,orient=VERTICAL,command=tree.yview)
-        self.scrollbar.grid(column=5,row=1,rowspan=2, sticky=(N,S))
+        self.scrollbar.grid(column=5,row=2, sticky=(N,S))
 
         #Buttons for score entry
         result_frame = self.result_entry_frame = tk.Frame(self)
