@@ -15,7 +15,7 @@ class RankingFrame(tk.Frame):
         # f['padding'] = (10,5)
 
         #Making Treeview Table
-        tree = tree = ttk.Treeview(self,selectmode='browse')
+        tree = self.player_standings = ttk.Treeview(self,selectmode='browse')
         tree.grid(column=1,row=1, rowspan = 2, columnspan = 4,sticky=(N,S,W,E))
 
         #Defining Columns
