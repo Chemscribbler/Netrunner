@@ -1,7 +1,11 @@
-from ..core.Player import Player
-from ..core.Tournament import Tournament
+from datetime import date
 import csv
-
+try:
+    from ..core.Player import Player
+    from ..core.Tournament import Tournament
+except ImportError:
+    from Player import Player
+    from Tournament import Tournament
 
 class Manager(object):
     """
@@ -12,6 +16,8 @@ class Manager(object):
         self.tournament_dict = {}
         self.active_tournament = None
         self.active_tournament_key = None
+        self.organizer = 'SASS'
+
 
     def create_tournament(self, id):
         try:
@@ -30,6 +36,7 @@ class Manager(object):
         """
         plr = Player(plr_name, **kwargs)
         self.active_tournament.add_player(plr)
+        return plr
 
     def drop_player(self, player_name):
         """
@@ -56,6 +63,15 @@ class Manager(object):
         self.active_tournament.start_tourney()
         self.display_pairings()
     
+    def _rank_players(self):
+        players = self.active_tournament.player_dict.values()
+        plr_list = [plr for plr in players]
+        for plr in self.active_tournament.dropped_players.values():
+            plr_list.append(plr)
+        plr_list.sort(key = lambda player: player.sos, reverse=True)
+        plr_list.sort(key = lambda player: player.score, reverse=True)
+        return plr_list
+
     def display_pairings(self):
         """
         Utility function for showing pairings
@@ -72,14 +88,45 @@ class Manager(object):
         Utility function for showing standings.
         Columns are Player_ID, Name, Score, SoS, and Side Balance
         """
-        players = self.active_tournament.player_dict.values()
-        plr_list = [plr for plr in players]
-        for plr in self.active_tournament.dropped_players.values():
-            plr_list.append(plr)
-        plr_list.sort(key = lambda player: player.sos, reverse=True)
-        plr_list.sort(key = lambda player: player.score, reverse=True)
-        for plr in plr_list:
+        for plr in self._rank_players():
             print(plr)
+
+    def _gui_return_rankings(self):
+        """
+        Iterable that returns players in descending rank order (Score > SoS > ???)
+        """
+        for plr in self._rank_players():
+            if not plr.name == "Bye":
+                yield plr
+        for plr in self.active_tournament.dropped_players.values():
+            if not plr.name == "Bye":
+                yield plr
+
+    def _gui_return_pairings(self):
+        """
+        Iterable that returns table pairs
+        """
+        highest_table = 1
+        player_to_tables = {}
+        tables_to_players = {}
+        t = self.active_tournament
+        for plr in self._rank_players():
+            try:
+                player_to_tables[plr.id]
+            except KeyError:
+                for pair in t.pairings:
+                    if pair[0] == plr.id or pair[1] == plr.id:
+                        player_to_tables[pair[0]] = highest_table
+                        player_to_tables[pair[1]] = highest_table
+                        tables_to_players[highest_table] = pair
+                        highest_table += 1
+                        break
+        for table, pair in tables_to_players.items():
+            if t.player_dict[pair[0]].round_dict[t.round]['side'] > 0:
+                yield (table,pair[0],pair[1])
+            else:
+                yield (table,pair[1],pair[0])
+
 
     def display_side_name(self,side_value):
         if side_value < 0:
@@ -151,22 +198,27 @@ class Manager(object):
         else:
             return True
 
-    def pair_round(self):
+    def pair_round(self,display=True):
         """
         Pairs round automatically- should allow for people to rematch with opposite sides
         """
         t = self.active_tournament
-        if not self.check_round_done():
-            raise ValueError("Not all pairs have reported")
+        # if not self.check_round_done():
+        #     raise ValueError("Not all pairs have reported")
         t.round += 1
         t.make_initial_graph()
+        iteration = 1
         while not t.pairings_done:
+            print(iteration)
+            iteration += 1
             t.make_pairings()
             t.test_pairings()
-        t.make_pairings()
-        print(f"Pairing Result {t.test_pairings()}")
+        # print(t.player_dict)
+        # t.make_pairings()
         t.assign_sides()
-        self.display_pairings()
+        if display:
+            print(f"Pairing Result {t.test_pairings()}")
+            self.display_pairings()
     
     def finish_round(self,pair_next=True,display_rankings=True):
         """
@@ -177,6 +229,7 @@ class Manager(object):
         if not self.check_round_done():
             raise ValueError("Not all pairs have reported")
         self.compute_sos()
+        self.compute_ext_sos()
         if display_rankings:
             self.display_rankings()
         if pair_next:
@@ -187,12 +240,37 @@ class Manager(object):
             opponent_total_score = 0
             opponents_games_played = 0
             for rnd in player.round_dict.values():
-                opponent = self.active_tournament.player_dict[rnd['opp_id']]
+                try:
+                    opponent = self.active_tournament.player_dict[rnd['opp_id']]
+                    if opponent.name == 'Bye':
+                        continue
+                except KeyError:
+                    opponent = self.active_tournament.dropped_players[rnd['opp_id']]
+                    if opponent.name == 'Bye':
+                        continue
                 opponent_total_score += opponent.score
                 opponents_games_played += len(opponent.round_dict)
             player.sos = opponent_total_score/opponents_games_played
 
-    def backup(self): 
+    def compute_ext_sos(self):
+        for player in self.active_tournament.player_dict.values():
+            opponents_total_sos = 0
+            opponents_games_played = 0
+            for rnd in player.round_dict.values():
+                try:
+                    opponent = self.active_tournament.player_dict[rnd['opp_id']]
+                    if opponent.name == 'Bye':
+                        continue
+                except KeyError:
+                    opponent = self.active_tournament.dropped_players[rnd['opp_id']]
+                    if opponent.name == 'Bye':
+                        continue
+                opponents_total_sos += opponent.score
+                opponents_games_played += len(opponent.round_dict)
+            player.ext_sos = opponents_total_sos/opponents_games_played
+
+
+    def backup(self,path=None): 
         """
         Creates a series of .csv files to store results and player records
         """
@@ -215,6 +293,52 @@ class Manager(object):
             plr_list.sort(key = lambda player: player.score, reverse=True)
             for entry in plr_list:
                 rank_writer.writerow([entry.name, entry.id, entry.score, entry.sos, entry.side_balance])
+
+    def export_json(self):
+        """
+        Creates json that matches ABR format
+        """
+        json = {
+            'name': self.active_tournament_key,
+            'date': date.today().strftime("%Y-%m-%d"),
+            'cutToTop': 0,
+            'preliminaryRounds': 0,
+            'tournamentOrganiser':{
+                'nrdbId':'',
+                'nrdbUsername':self.organizer
+            },
+            'players': {},
+            'eliminationPlayers':{},
+            'rounds':{},
+            'uploadedFrom':'SASS',
+            'links':{}
+        }
+
+        player_list = self._rank_players()
+        for i, plr in enumerate(player_list):
+            json['players'][i] = {
+                'id':plr.id,
+                'name':plr.name,
+                'rank':i,
+                'corpIdentity':plr.corp_id,
+                'runnerIdentity':plr.runner_id,
+                'matchPoints':plr.score,
+                'strengthOfSchedule':str(round(plr.sos,4)),
+                'extendedStrengthOfSchedule':str(round(plr.ext_sos,6))
+            }
+        
+        return json
+
+    def export_standings_csv(self,file_path=None):
+        player_list = self._rank_players()
+        if not file_path:
+            file_path = f"{self.active_tournament_key}.csv"
+        with open(file_path,'w',newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(["Name",'ID','Score','SoS','Ext. SoS', 'Side Balance', 'Corp ID', "Runner ID"])
+            for plr in player_list:
+                writer.writerow([plr.name, plr.id, plr.score,plr.sos,plr.ext_sos, plr.side_balance, plr.corp_id, plr.runner_id])
+
 
     def test_players(self, count):
         name_list = ["Alfa", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel", "India", "Juliett", "Kilo", "Lima", "Mike", "November", "Oscar", "Papa", "Quebec", "Romeo", "Sierra", "Tango", "Uniform", "Victor", "Whiskey", "X-ray", "Yankee", "Zulu"]

@@ -1,9 +1,14 @@
-from ..core.Player import Player
-from ..core.Bye_Player import Bye_Player
 import pandas as pd
 import numpy as np
 import networkx as nx
 import random
+try:
+    from ..core.Player import Player
+    from ..core.Bye_Player import Bye_Player
+except ImportError:
+    from Player import Player
+    from Bye_Player import Bye_Player
+
 
 class Tournament(object):
 
@@ -43,11 +48,11 @@ class Tournament(object):
         self.pairings_done = True
 
     def add_bye_player(self):
-        bye = Bye_Player.Bye_Player()
+        bye = Bye_Player(self)
         self.player_dict[bye.id] = bye        
         
     def make_score_penalty_array(self):
-        df = np.array([[(player.score)/3 for player in self.player_dict.values()]])
+        df = np.array([[(player.score)/self.win_points for player in self.player_dict.values()]])
         df = abs(df - df.T)*self.score_factor
         return df
 
@@ -129,10 +134,19 @@ class Tournament(object):
                     del self.player_dict[-1]
                 except KeyError:
                     self.add_bye_player()
+                player.name = player.name + " (dropped)"
                 return True
             else:
+                player.name = player.name + " (dropped)"
                 return True
         except (KeyError, AttributeError):
             print(f"{player} does not seem to be in the tournament")
             return False
-            
+    
+    def get_lowest_score(self):
+        min_score = 100
+        for plr in self.player_dict.values():
+            if plr.name != 'Bye':
+                if plr.score < min_score:
+                    min_score = plr.score
+        return min_score

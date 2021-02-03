@@ -1,10 +1,14 @@
-from ..core.Player import Player
+try:
+    from ..core.Player import Player
+except ImportError:
+    from Player import Player
 
 class Bye_Player(Player):
-    def __init__(self):
+    def __init__(self,tournament):
         super().__init__(name = "Bye")
         self.id = -1
         self.score = -5
+        self.tournament = tournament
     
     def __str__(self):
         return "Bye"
@@ -15,6 +19,11 @@ class Bye_Player(Player):
                 return False
             else:
                 return True
+        t_min_score = self.tournament.get_lowest_score()
+        if self.tournament.player_dict[opp_id].score > t_min_score:
+            return False
+        else:
+            return True
     
     def record_pairing(self, opp_id, assigned_side, rnd):
         self.round_dict[rnd] = {"opp_id": opp_id, "side": 0}

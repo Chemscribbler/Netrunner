@@ -1,6 +1,7 @@
 from tkinter import ttk
 from tkinter import *
-
+from ..gui.pairings import PairingsFrame
+from ..gui.rankings import RankingFrame
 
 class New_Tournament_Popup(ttk.Frame):
     def __init__(self, root, content_manager):
@@ -9,13 +10,10 @@ class New_Tournament_Popup(ttk.Frame):
         self.content_manager = content_manager
         self.tour_manager = self.content_manager.manager
         self.window = Toplevel(root)
-        mainframe = ttk.Frame(root, padding="3 3 12 12")
-        mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
-
         self.window.title("Make New Tournament")
 
         mainframe = ttk.Frame(self.window, padding="3 3 12 12")
-        mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
+        mainframe.grid(column=0, row=0, sticky=(N, W, E, S))    
         self.window.columnconfigure(0, weight=1)
         self.window.rowconfigure(0, weight=1)
         
@@ -56,10 +54,18 @@ class New_Tournament_Popup(ttk.Frame):
         button.pack()
 
     def make_tournament(self):
+        cmf = self.content_manager.frames
         self.tour_manager.create_tournament(self.t_name.get())
         print(f"Key: {self.tour_manager.active_tournament_key}, Score Factor: {self.tour_manager.active_tournament.score_factor}")
         self.tour_manager.active_tournament.score_factor = self.score_factor.get()
-        self.content_manager.frames["TNameFrame"].T_Name.set(self.t_name.get())
+        cmf["TNameFrame"].T_Name.set(self.t_name.get())
+        cmf["TNameFrame"].start_button.state(['!disabled'])
+        cmf['RankingFrame'] = RankingFrame(self.root, self.content_manager)
+        cmf['PairingsFrame'] = PairingsFrame(self.root, self.content_manager)
+        cmf['PairingsFrame'].round_num.set(0)
+        cmf['RankingFrame'].add_p_button.state(['!disabled'])
+        # cmf['RankingFrame'].player_standings.delete(*cmf['RankingFrame'].player_standings.get_children())
+        # cmf['PairingsFrame'].pairings_table.delete(*cmf['PairingsFrame'].pairings_table.get_children())
         self.window.destroy()
 
     def score_factor_explainer(self):
