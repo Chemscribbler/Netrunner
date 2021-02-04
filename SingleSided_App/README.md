@@ -6,6 +6,9 @@ This app is meant to be an interactive application for tournament managers to se
 
 This is an early version, so many features will be missing. Most importantly hand re-pairings, double sided, and top cuts are not implemented at all, but are on the list of features. Additionally the tournament import/export is very basic, and is not an easily parsable log of what occurred. Eventually I want to make the export [Always Be Running](https://alwaysberunning.net/) compatible.
 
+## Submit Feature Request/Bug Reports Here (if you don't have a GitHub account already)
+[https://gitreports.com/issue/Chemscribbler/Netrunner](https://gitreports.com/issue/Chemscribbler/Netrunner)
+
 ## Some current known limitations:
 - Resizing does not work the way it should (High Priority Fix)
 - If you mark the Bye player as winning the match, no error is thrown
