@@ -9,6 +9,11 @@ This is an early version, so many features will be missing. Most importantly han
 ## Submit Feature Request/Bug Reports Here (if you don't have a GitHub account already)
 [https://gitreports.com/issue/Chemscribbler/Netrunner](https://gitreports.com/issue/Chemscribbler/Netrunner)
 
+## How to use:
+- On PC, on the webpage you can go to the /dist folder above and download the sass.exe file. You should be able to run it from there, though Windows may tell you it's an unauthorized/unsafe app.
+- Any system: Download the repo (either using the download zip, or clone), open up your command line interface of choice (Terminal on Mac/Command Prompt on Windows) and navigate to the folder where you saved this (it should have sass.py in it) and then type 'python sass.py'.
+- Note for Mac users: I built this with Python 3.8, but Macs have Python 2.7.x installed, and as the default python environment. I suspect sass.py will not run without Python 3.X installed, and usually invoked with a python3 instead. I'm working on getting an similar sass.app file for you, but it may be a minute due to some limitations with my build tool
+
 ## Some current known limitations:
 - Resizing does not work the way it should (High Priority Fix)
 - If you mark the Bye player as winning the match, no error is thrown
