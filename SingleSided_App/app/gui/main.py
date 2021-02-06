@@ -83,7 +83,7 @@ class TNameFrame(tk.Frame):
         self.frame.grid_rowconfigure(0,weight=1)
         self.frame.grid_columnconfigure(0,weight=1)
         
-        self.T_Name = tk.StringVar(value="Test")
+        self.T_Name = tk.StringVar(value="Create a Tournament")
         t_name = tk.Label(self.frame,textvariable= self.T_Name)
         t_name.grid(column=1,row=1)
         self.start_button = ttk.Button(self.frame,text="Start Tournament", command=self.start_tournament)
