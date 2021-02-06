@@ -1,5 +1,9 @@
 import tkinter as tk
 from tkinter import (ttk, N,S, W, CENTER, E, VERTICAL, NO, messagebox)
+try:
+    from app.util.id_importer import get_all_ids
+except:
+    pass
 
 class RankingFrame(tk.Frame):
     def __init__(self, parent, controller):
@@ -53,8 +57,14 @@ class RankingFrame(tk.Frame):
         name = ttk.Entry(self.add_player_frame,textvariable=self.p_name)
         name.grid(column=2, row=1)
 
-        corp_ids = ["NA",'HB:EtF',"NBN:MN",'W:BABW',"J:PE"]
-        runner_ids = ['NA',"Kate",'Noise','Gabe']
+
+        try:
+            ids = get_all_ids()
+            corp_ids = ids[0]
+            runner_ids = ids[1]
+        except:
+            corp_ids = ["NA",'HB:EtF',"NBN:MN",'W:BABW',"J:PE"]
+            runner_ids = ['NA',"Kate",'Noise','Gabe']
         
         self.sel_corp = tk.StringVar()
         self.sel_runner = tk.StringVar()
