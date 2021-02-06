@@ -98,9 +98,6 @@ class Manager(object):
         for plr in self._rank_players():
             if not plr.name == "Bye":
                 yield plr
-        for plr in self.active_tournament.dropped_players.values():
-            if not plr.name == "Bye":
-                yield plr
 
     def _gui_return_pairings(self):
         """
@@ -245,8 +242,11 @@ class Manager(object):
                     if opponent.name == 'Bye':
                         continue
                 except KeyError:
-                    opponent = self.active_tournament.dropped_players[rnd['opp_id']]
-                    if opponent.name == 'Bye':
+                    try:
+                        opponent = self.active_tournament.dropped_players[rnd['opp_id']]
+                        if opponent.name == 'Bye':
+                            continue
+                    except:
                         continue
                 opponent_total_score += opponent.score
                 opponents_games_played += len(opponent.round_dict)
@@ -265,8 +265,11 @@ class Manager(object):
                     if opponent.name == 'Bye':
                         continue
                 except KeyError:
-                    opponent = self.active_tournament.dropped_players[rnd['opp_id']]
-                    if opponent.name == 'Bye':
+                    try:
+                        opponent = self.active_tournament.dropped_players[rnd['opp_id']]
+                        if opponent.name == 'Bye':
+                            continue
+                    except:
                         continue
                 opponents_total_sos += opponent.score
                 opponents_games_played += len(opponent.round_dict)
