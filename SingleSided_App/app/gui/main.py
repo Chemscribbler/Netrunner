@@ -43,7 +43,7 @@ class MainApp(tk.Tk):
         # file_menu.add_command(label="Open",command=donothing)
         file_menu.add_command(label='Export Json',command=self.json_export)
         file_menu.add_command(label='Export CSV',command=self.csv_export)
-        file_menu.add_command(lebel='Export pairings csv',command=self.pairings_csv_export)
+        file_menu.add_command(label='Export pairings csv',command=self.pairings_csv_export)
         file_menu.add_separator()
         file_menu.add_command(label='Quit',command=self.destroy)
         menu_bar.add_cascade(label="File",menu=file_menu)

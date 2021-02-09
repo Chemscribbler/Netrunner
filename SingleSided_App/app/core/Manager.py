@@ -350,11 +350,12 @@ class Manager(object):
     
     def export_pairings_csv(self,file_path=None):
         pairings_iter = self._gui_return_pairings()
+        d = self.active_tournament.player_dict
         with open(file_path,'w',newline='') as csvfile:
             writer = csv.writer(csvfile)
-            writer.writerow('Table',"Corp Player",'Runner Player')
+            writer.writerow(['Table',"Corp Player",'Runner Player'])
             for pair in pairings_iter:
-                writer.writerow([pair[0],pair[1],pair[2]])
+                writer.writerow([pair[0],d[pair[1]].name,d[pair[2]].name])
 
 
 
