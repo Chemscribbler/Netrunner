@@ -18,15 +18,16 @@ def get_all_ids(force_update=True):
         return format_return(request.json()['data'])    
 
 def format_return(cards):
-    corp_ids = []
-    runner_ids = []
+    corp_ids = set()
+    runner_ids = set()
     for card in cards:
         if card['type_code'] == 'identity':
             if card['side_code'] == 'corp':
-                corp_ids.append(card['title'])
+                corp_ids.add(card['title'])
             elif card['side_code'] == 'runner':
-                runner_ids.append(card['title'])
-
+                runner_ids.add(card['title'])
+    corp_ids = list(corp_ids)
+    runner_ids = list(runner_ids)
     corp_ids.sort()
     runner_ids.sort()
 
