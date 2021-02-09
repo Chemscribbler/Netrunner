@@ -128,8 +128,8 @@ class Tournament(object):
     def drop_player(self, player):
         try:
             del self.player_dict[player.id]
-            self.dropped_players[player.id] = player
             if self.round > 0:
+                self.dropped_players[player.id] = player
                 try:
                     del self.player_dict[-1]
                 except KeyError:

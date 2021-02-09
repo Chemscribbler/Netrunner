@@ -54,8 +54,8 @@ class RankingFrame(tk.Frame):
         add_p_button.state(['disabled'])
         add_p_button.grid(column=1, row=1)
         self.p_name = tk.StringVar(value="Name")
-        name = ttk.Entry(self.add_player_frame,textvariable=self.p_name)
-        name.grid(column=2, row=1)
+        self.name = ttk.Entry(self.add_player_frame,textvariable=self.p_name)
+        self.name.grid(column=2, row=1)
 
 
         try:
@@ -99,6 +99,10 @@ class RankingFrame(tk.Frame):
             messagebox.showerror(repr(e),f"Something went wrong. Most likey you have not made a Tournament yet\n{str(e)}")
         except ValueError as e:
             messagebox.showerror(repr(e),str(e))
+        self.name.delete(0,'end')
+        self.name.focus()
+        
+        
     
     def update_rankings(self):
         self.player_standings.delete(*self.player_standings.get_children())
@@ -121,4 +125,6 @@ class RankingFrame(tk.Frame):
         name = self.player_standings.item(row)['values'][0]
         if tk.messagebox.askyesno("Drop Player?",f"Drop {name}? This is irreversible",icon='warning'):
             print( self.controller.manager.drop_player(name))
+            if(self.controller.manager.active_tournament.round == 0):
+                self.update_rankings()
 
