@@ -28,7 +28,7 @@ This is an early version, so many features will be missing. Most importantly han
 - Make a pipeline for ABR uploading
 - Double sided Swiss support
 - Dynamically adjust score factor (see explaination below)
-- Get some Netrunnerdb integration to get updated ID choices
+- ~~Get some Netrunnerdb integration to get updated ID choices~~
 - Ability to load/import tournaments
 
 
