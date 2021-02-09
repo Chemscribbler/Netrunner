@@ -319,7 +319,8 @@ class Manager(object):
             'players': {},
             'eliminationPlayers':{},
             'uploadedFrom':'SASS',
-            'links':{}
+            'links': {0: {'rel':'schemaderivedfrom','href':"http://steffens.org/nrtm/nrtm-schema.json"},
+                      1: {'rel':'uploadedfrom','href':'https://github.com/Chemscribbler/Netrunner/tree/main/SingleSided_App'}}
         }
 
         player_list = self._rank_players()
@@ -346,6 +347,15 @@ class Manager(object):
             writer.writerow(["Name",'ID','Score','SoS','Ext. SoS', 'Side Balance', 'Corp ID', "Runner ID"])
             for plr in player_list:
                 writer.writerow([plr.name, plr.id, plr.score,plr.sos,plr.ext_sos, plr.side_balance, plr.corp_id, plr.runner_id])
+    
+    def export_pairings_csv(self,file_path=None):
+        pairings_iter = self._gui_return_pairings()
+        with open(file_path,'w',newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow('Table',"Corp Player",'Runner Player')
+            for pair in pairings_iter:
+                writer.writerow([pair[0],pair[1],pair[2]])
+
 
 
     def test_players(self, count):

@@ -43,6 +43,7 @@ class MainApp(tk.Tk):
         # file_menu.add_command(label="Open",command=donothing)
         file_menu.add_command(label='Export Json',command=self.json_export)
         file_menu.add_command(label='Export CSV',command=self.csv_export)
+        file_menu.add_command(lebel='Export pairings csv',command=self.pairings_csv_export)
         file_menu.add_separator()
         file_menu.add_command(label='Quit',command=self.destroy)
         menu_bar.add_cascade(label="File",menu=file_menu)
@@ -71,6 +72,12 @@ class MainApp(tk.Tk):
         outfile = asksaveasfilename(filetypes=files,defaultextension='.csv')
         self.manager.export_standings_csv(file_path=outfile)
 
+    def pairings_csv_export(self):
+        files = [('CSV Comma-Seperated Values', '*.csv'),
+                 ('TXT Text File','*.txt')]
+        default_text = f"{self.manager.active_tournament_key}_round_{self.manager.active_tournament.round}"
+        outfile = asksaveasfilename(filetypes=files,defaultextension='.csv',initialfile=default_text)
+        self.manager.export_pairings_csv(file_path=outfile)
 
 
 class TNameFrame(tk.Frame):
