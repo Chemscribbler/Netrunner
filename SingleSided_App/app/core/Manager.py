@@ -271,7 +271,7 @@ class Manager(object):
                             continue
                     except:
                         continue
-                opponents_total_sos += opponent.score
+                opponents_total_sos += opponent.sos
                 opponents_games_played += len(opponent.round_dict)
             if opponents_games_played == 0:
                 #Handling div by 0 issues
@@ -318,7 +318,6 @@ class Manager(object):
             },
             'players': {},
             'eliminationPlayers':{},
-            'rounds':{},
             'uploadedFrom':'SASS',
             'links':{}
         }
