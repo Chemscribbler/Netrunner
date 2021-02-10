@@ -53,7 +53,8 @@ class Tournament(object):
         
     def make_score_penalty_array(self):
         df = np.array([[(player.score)/self.win_points for player in self.player_dict.values()]])
-        df = abs(df - df.T)*self.score_factor
+        df = abs(df - df.T)
+        df = (df*(df+1))/2*self.score_factor
         return df
 
     def make_side_penalty_array(self):

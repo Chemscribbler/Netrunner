@@ -96,11 +96,12 @@ class RankingFrame(tk.Frame):
             plr = self.controller.manager.add_player(self.p_name.get(), corp_id = self.combo_corp.get(), runner_id = self.combo_runner.get())
             self.player_standings.insert('','end',iid=plr.id,values=(plr.name, plr.score, plr.sos, plr.corp_id, plr.runner_id, plr.side_balance))
         except AttributeError as e:
-            messagebox.showerror(repr(e),f"Something went wrong. Most likey you have not made a Tournament yet\n{str(e)}")
+            messagebox.showerror(repr(e),f"Something went wrong. Most likey you have not made a Tournament yet\n Error: {str(e)}")
         except ValueError as e:
             messagebox.showerror(repr(e),str(e))
         self.name.delete(0,'end')
         self.name.focus()
+        self.player_standings.yview_moveto(1)
         
         
     
