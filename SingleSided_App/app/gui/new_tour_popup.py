@@ -20,7 +20,7 @@ class New_Tournament_Popup(ttk.Frame):
         
         #Score Factor Row
         self.score_factor = IntVar()
-        valid_s_f = [1,3,5,10,50]
+        valid_s_f = [1,2,3,5,10,50]
         score_factor_select = ttk.Combobox(mainframe, textvariable=self.score_factor)
         score_factor_select['values']= valid_s_f
         score_factor_select.state(['readonly'])
@@ -74,14 +74,18 @@ class New_Tournament_Popup(ttk.Frame):
         text = tk.Text(exp_win,wrap="word",width=120)
         text.grid(column=1, row=1)
         text.insert('1.0',
-"Score factor affects how many prestige up/down the algorithm will\
+"Score factor affects how many prestige (perfect score groups) up/down the algorithm will\
 look to avoid having someone play an additional game with the side they have played more.\
 Another player in the same level will be prefered, though some configurations will have pair\
 up/downs to minimize the overall parity\n\
- 1: Most aggressive side parity (will search +/- 8 prestige levels)\n\
- 3: Default, will search +/- two levels for side parity\n\
- 5: Will search +/- one level\n\
-10: Will search +/- 6 levels only if it avoids both players having 2 extra games on the same side\n\
-50: Will search +/- 1 level only if it avoids both players having 2 extra games on the same side.")
+Each option has two numbers, the amount of prestige it will search to prevent pairing two players\
+who have a side bias (i.e. both players have played 2 corp games and 1 runner game) of one\
+and the amount of prestige needed when both players have a side bias of two.\n\
+ 1: 3, 10\n\
+ 2: 2, 7\n\
+ 3: 1, 6\n\
+ 5: 1, 4\n\
+10: 0, 3\n\
+50: 0, 1.")
         text['state']='disabled'
         
