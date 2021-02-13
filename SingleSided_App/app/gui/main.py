@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from tkinter.filedialog import asksaveasfile, asksaveasfilename
+from tkinter.filedialog import asksaveasfile, asksaveasfilename, askopenfilename
 from ..core import Manager  
 from ..gui.new_tour_popup import New_Tournament_Popup as ntp
 from ..gui.pairings import PairingsFrame
@@ -43,7 +43,11 @@ class MainApp(tk.Tk):
         # file_menu.add_command(label="Open",command=donothing)
         file_menu.add_command(label='Export Json',command=self.json_export)
         file_menu.add_command(label='Export CSV',command=self.csv_export)
+        file_menu.add_command(label='Save Tournament',command=self.save_tournament)
         file_menu.add_command(label='Export pairings csv',command=self.pairings_csv_export)
+        file_menu.add_separator()
+        file_menu.add_command(label='Load Tournament',command=self.load_tournament)
+        file_menu.add_command(label='Import Players',command=self.import_players)
         file_menu.add_separator()
         file_menu.add_command(label='Quit',command=self.destroy)
         menu_bar.add_cascade(label="File",menu=file_menu)
@@ -78,6 +82,35 @@ class MainApp(tk.Tk):
         default_text = f"{self.manager.active_tournament_key}_round_{self.manager.active_tournament.round}"
         outfile = asksaveasfilename(filetypes=files,defaultextension='.csv',initialfile=default_text)
         self.manager.export_pairings_csv(file_path=outfile)
+
+    def save_tournament(self):
+        files= [('Savefile','*.pkl')]
+        outfile = asksaveasfilename(filetypes=files,defaultextension='.pkl')
+        self.manager.save_tournament(outfile)
+    
+    def load_tournament(self):
+        infile = askopenfilename()
+        self.manager.open_tournament(infile)
+        self.refresh_screen()
+
+    def refresh_screen(self):
+        self.frames['TNameFrame'].T_Name.set(self.manager.active_tournament_key)
+        self.frames['RankingFrame'].update_rankings()
+        self.frames['PairingsFrame'].update_pairings_display()
+        pf = self.frames['PairingsFrame']
+        if self.manager.check_round_done():
+            for button in pf.result_buttons:
+                button['state'] = tk.DISABLED
+            pf.pair_round_button['state'] = tk.NORMAL
+            pf.close_round_button['state'] = tk.DISABLED
+        else:
+            for button in pf.result_buttons:
+                button["state"] = tk.NORMAL
+            pf.pair_round_button['state'] = tk.DISABLED
+            pf.close_round_button["state"] = tk.NORMAL
+
+    def import_players(self):
+        pass
 
 
 class TNameFrame(tk.Frame):

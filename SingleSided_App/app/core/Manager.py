@@ -1,11 +1,23 @@
 from datetime import date
 import csv
+import pickle
+import sys
+from os.path import splitext, split
 try:
-    from ..core.Player import Player
-    from ..core.Tournament import Tournament
+    from ..core import Player as P
+    from ..core import Tournament as T
+    from ..core import Bye_Player as B
 except ImportError:
-    from Player import Player
-    from Tournament import Tournament
+    import Player as P
+    import Tournament as T
+    import Bye_Player as B
+
+
+#Hack to get pickle.load to work
+sys.modules['Tournament']= T
+sys.modules['Player'] = P
+sys.modules['Bye_Player'] = B
+
 
 class Manager(object):
     """
@@ -26,7 +38,7 @@ class Manager(object):
         except KeyError:
             pass
 
-        self.tournament_dict[id] = Tournament()
+        self.tournament_dict[id] = T.Tournament()
         self.active_tournament = self.tournament_dict[id]
         self.active_tournament_key = id
     
@@ -34,7 +46,7 @@ class Manager(object):
         """
         Add a player to the active tournament, names must be unique
         """
-        plr = Player(plr_name, **kwargs)
+        plr = P.Player(plr_name, **kwargs)
         self.active_tournament.add_player(plr)
         return plr
 
@@ -68,6 +80,7 @@ class Manager(object):
         plr_list = [plr for plr in players]
         for plr in self.active_tournament.dropped_players.values():
             plr_list.append(plr)
+        plr_list.sort(key = lambda player: player.ext_sos, reverse=True)
         plr_list.sort(key = lambda player: player.sos, reverse=True)
         plr_list.sort(key = lambda player: player.score, reverse=True)
         return plr_list
@@ -377,6 +390,20 @@ class Manager(object):
     def help(self):
         with open("help.txt", 'r') as f:
             print(f.read())
+
+    def save_tournament(self, file_path=None):
+        if file_path is None:
+            file_path = f"{m.active_tournament_key}.r{m.active_tournament.round}.pkl"
+        with open(file_path, 'wb') as pfile:
+            pickle.dump(self.active_tournament, pfile)
+    
+    def open_tournament(self, file_path):
+        with open(file_path, 'rb') as pfile:
+            t_name = splitext(split(file_path)[1])[0] 
+            self.active_tournament_key = t_name
+            self.tournament_dict[t_name] = pickle.load(pfile)
+            self.active_tournament = self.tournament_dict[t_name]
+            
 
 if __name__ == "__main__":
     m = Manager()

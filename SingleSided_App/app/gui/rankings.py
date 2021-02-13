@@ -23,13 +23,14 @@ class RankingFrame(tk.Frame):
         tree.grid(column=1,row=1, rowspan = 2, columnspan = 4,sticky=(N,S,W,E))
 
         #Defining Columns
-        tree['columns'] = ("Name", "Score", "SoS", "CID", "RID","SB")
+        tree['columns'] = ("Name", "Score", "SoS",'ESoS', "CID", "RID","SB")
 
         #Formatting
         tree.column("#0",width=0,stretch=NO)
         tree.column("Name",anchor=W)
         tree.column('Score',anchor=CENTER,width=60)
         tree.column('SoS',anchor=CENTER,width=60)
+        tree.column('ESoS',anchor=CENTER,width=60)
         tree.column('CID',anchor=W)
         tree.column('RID',anchor=W)
         tree.column('SB',anchor=CENTER,width=60)
@@ -39,6 +40,7 @@ class RankingFrame(tk.Frame):
         tree.heading("Name",text='Name')
         tree.heading("Score",text="Score")
         tree.heading("SoS",text="SoS")
+        tree.heading("ESoS",text="Ext. SoS")
         tree.heading('CID',text='Corp')
         tree.heading('RID',text='Runner')
         tree.heading('SB',text='Side')
@@ -94,7 +96,7 @@ class RankingFrame(tk.Frame):
     def add_player(self):
         try:
             plr = self.controller.manager.add_player(self.p_name.get(), corp_id = self.combo_corp.get(), runner_id = self.combo_runner.get())
-            self.player_standings.insert('','end',iid=plr.id,values=(plr.name, plr.score, plr.sos, plr.corp_id, plr.runner_id, plr.side_balance))
+            self.player_standings.insert('','end',iid=plr.id,values=(plr.name, plr.score, plr.sos, plr.ext_sos, plr.corp_id, plr.runner_id, plr.side_balance))
         except AttributeError as e:
             messagebox.showerror(repr(e),f"Something went wrong. Most likey you have not made a Tournament yet\n Error: {str(e)}")
         except ValueError as e:
@@ -108,7 +110,7 @@ class RankingFrame(tk.Frame):
     def update_rankings(self):
         self.player_standings.delete(*self.player_standings.get_children())
         for plr in self.controller.manager._gui_return_rankings():
-            self.player_standings.insert('','end',iid=plr.id,values=(plr.name, plr.score, plr.sos, plr.corp_id, plr.runner_id, plr.side_balance))
+            self.player_standings.insert('','end',iid=plr.id,values=(plr.name, plr.score, round(plr.sos,3), round(plr.ext_sos,4), plr.corp_id, plr.runner_id, plr.side_balance))
 
     def start_tournament(self):
         self.update_rankings()
