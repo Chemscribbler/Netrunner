@@ -91,6 +91,9 @@ class MainApp(tk.Tk):
     def load_tournament(self):
         infile = askopenfilename()
         self.manager.open_tournament(infile)
+        if self.manager.active_tournament.round == 0:
+            self.frames['RankingFrame'].add_p_button['state'] = tk.NORMAL
+            self.frames['TNameFrame'].start_button['state'] = tk.NORMAL
         self.refresh_screen()
 
     def refresh_screen(self):
