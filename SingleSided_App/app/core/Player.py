@@ -17,6 +17,7 @@ class Player():
         self.sos = 0
         self.ext_sos = 0
 
+        self.is_bye = False
         self.earned_bye = earned_bye
         self.recieved_bye = False
     

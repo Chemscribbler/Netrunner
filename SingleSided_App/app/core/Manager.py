@@ -78,6 +78,7 @@ class Manager(object):
         plr_list = [plr for plr in players]
         for plr in self.active_tournament.dropped_players.values():
             plr_list.append(plr)
+        plr_list = [plr for plr in plr_list if not plr.is_bye]
         plr_list.sort(key = lambda player: player.ext_sos, reverse=True)
         plr_list.sort(key = lambda player: player.sos, reverse=True)
         plr_list.sort(key = lambda player: player.score, reverse=True)
@@ -107,7 +108,7 @@ class Manager(object):
         Iterable that returns players in descending rank order (Score > SoS > Ext SoS)
         """
         for plr in self._rank_players():
-            if not plr.name == "Bye":
+            if not plr.is_bye:
                 yield plr
 
     def _gui_return_pairings(self):
@@ -236,7 +237,7 @@ class Manager(object):
 
         player_list = self._rank_players()
         for i, plr in enumerate(player_list):
-            if plr.id == -1:
+            if plr.is_bye:
                 continue
             json['players'][i] = {
                 'id':plr.id,
@@ -259,7 +260,8 @@ class Manager(object):
             writer = csv.writer(csvfile)
             writer.writerow(["Name",'ID','Score','SoS','Ext. SoS', 'Side Balance', 'Corp ID', "Runner ID"])
             for plr in player_list:
-                writer.writerow([plr.name, plr.id, plr.score,plr.sos,plr.ext_sos, plr.side_balance, plr.corp_id, plr.runner_id])
+                if not plr.is_bye:
+                    writer.writerow([plr.name, plr.id, plr.score,plr.sos,plr.ext_sos, plr.side_balance, plr.corp_id, plr.runner_id])
     
     def export_pairings_csv(self,file_path=None):
         pairings_iter = self._gui_return_pairings()

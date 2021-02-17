@@ -98,7 +98,7 @@ class Tournament(object):
             p1 = self.player_dict[pair[0]]
             p2 = self.player_dict[pair[1]]
 
-            if p1.id == -1 or p2.id == -1:
+            if p1.is_bye or p2.is_bye:
                 p1.record_pairing(p2.id, 0, self.round)
                 p2.record_pairing(p1.id, 0, self.round)
                 continue                
@@ -147,7 +147,7 @@ class Tournament(object):
     def get_lowest_score(self):
         min_score = 100
         for plr in self.player_dict.values():
-            if plr.name != 'Bye':
+            if not plr.is_bye:
                 if plr.score < min_score:
                     min_score = plr.score
         return min_score
@@ -245,6 +245,12 @@ class Tournament(object):
             self.make_pairings()
             self.assign_sides()
             self.test_pairings()
+        for pair in self.pairings:
+            pdct = self.player_dict
+            if pdct[pair[0]].is_bye:
+                pdct[pair[1]].recieved_bye = True
+            if pdct[pair[1]].is_bye:
+                pdct[pair[0]].recieved_bye = True
     
     def finish_round(self,pair_next=True):
         """
@@ -266,12 +272,12 @@ class Tournament(object):
             for rnd in player.round_dict.values():
                 try:
                     opponent = self.player_dict[rnd['opp_id']]
-                    if opponent.name == 'Bye':
+                    if opponent.is_bye:
                         continue
                 except KeyError:
                     try:
                         opponent = self.dropped_players[rnd['opp_id']]
-                        if opponent.name == 'Bye':
+                        if opponent.is_bye:
                             continue
                     except:
                         continue
@@ -289,12 +295,12 @@ class Tournament(object):
             for rnd in player.round_dict.values():
                 try:
                     opponent = self.player_dict[rnd['opp_id']]
-                    if opponent.name == 'Bye':
+                    if opponent.is_bye:
                         continue
                 except KeyError:
                     try:
                         opponent = self.dropped_players[rnd['opp_id']]
-                        if opponent.name == 'Bye':
+                        if opponent.is_bye:
                             continue
                     except:
                         continue

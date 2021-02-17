@@ -9,6 +9,7 @@ class Bye_Player(Player):
         self.id = -1
         self.score = -5
         self.tournament = tournament
+        self.is_bye = True
     
     def __str__(self):
         return "Bye"
