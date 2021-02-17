@@ -105,8 +105,6 @@ class RankingFrame(tk.Frame):
         self.name.focus()
         self.player_standings.yview_moveto(1)
         
-        
-    
     def update_rankings(self):
         self.player_standings.delete(*self.player_standings.get_children())
         for plr in self.controller.manager._gui_return_rankings():
