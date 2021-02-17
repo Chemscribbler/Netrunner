@@ -352,10 +352,12 @@ class Manager(object):
 
         player_list = self._rank_players()
         for i, plr in enumerate(player_list):
+            if plr.id == -1:
+                continue
             json['players'][i] = {
                 'id':plr.id,
                 'name':plr.name,
-                'rank':i,
+                'rank':i+1,
                 'corpIdentity':plr.corp_id,
                 'runnerIdentity':plr.runner_id,
                 'matchPoints':plr.score,

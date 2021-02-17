@@ -151,3 +151,4 @@ class Tournament(object):
                 if plr.score < min_score:
                     min_score = plr.score
         return min_score
+        
