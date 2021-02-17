@@ -71,7 +71,7 @@ class PairingsFrame(tk.Frame):
         self.pairings_table.delete(*self.pairings_table.get_children())
         for item in m._gui_return_pairings():
             self.pairings_table.insert('','end',values=(item[0], t_pdict[item[1]].name,'', t_pdict[item[2]].name,'',t_pdict[item[1]].id,t_pdict[item[2]].id))
-        self.round_num.set(t.round)
+        self.round_num.set(m.active_tournament.round)
 
     def start_tournament(self):
         for button in self.result_buttons:
