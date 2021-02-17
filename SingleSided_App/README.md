@@ -17,7 +17,7 @@ This is an early version, so many features will be missing. Most importantly han
 ## Some current known limitations:
 - Resizing does not work the way it should (High Priority Fix)
 - ~~If you mark the Bye player as winning the match, no error is thrown~~ Ignores you and assigns the win correctly
-- If you name a player 'Bye' you get weird results
+- ~~If you name a player 'Bye' you get weird results~~
 - ~~No ability to load~~
 - No ability to modify round results between pairings
 - Dropping a player take a while to show in rankings
