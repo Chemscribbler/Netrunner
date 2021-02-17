@@ -82,8 +82,8 @@ class Tournament(object):
             p1 = self.player_dict[pair[0]]
             p2 = self.player_dict[pair[1]]
 
-            p1_good = p1.check_allowed_pairing(p2.id)
-            p2_good = p2.check_allowed_pairing(p1.id)
+            p1_good = p1.check_allowed_pairing(p2.id, self.round)
+            p2_good = p2.check_allowed_pairing(p1.id, self.round)
 
             if p1_good and p2_good:
                 pass

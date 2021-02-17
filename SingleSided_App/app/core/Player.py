@@ -26,19 +26,20 @@ class Player():
     def __str__(self):
         return f"{self.id}:{self.name}- Score:{self.score} SoS:{self.sos} Sides:{self.side_balance}" 
     
-    def check_allowed_pairing(self, opp_id):
+    def check_allowed_pairing(self, opp_id, curr_round):
         if self.check_played_twice(opp_id):
             print("Played Twice")
             return False
         if opp_id == -1 and self.recieved_bye:
             print("Already had bye")
             return False
+        #Check to see if this is a rematch
         for rnd_record in self.round_dict.values():
             if rnd_record["opp_id"] != opp_id:
                 pass
             else:
-                #If the last match was of the opposite side of what this player wants to play, return false b/c they would want to play the same sides as before 
-                if rnd_record['side'] == self.side_balance*-1:
+                #If this is a rematch, does the forced side choice make their side bias worse (provided it's not 0)
+                if abs(self.side_balance + self.round_dict[curr_round]['side']) > self.side_balance and self.side_balance != 0:
                     print("Side would be wrong")
                     return False
                 else:
