@@ -20,7 +20,7 @@ This is an early version, so many features will be missing. Most importantly han
 - ~~If you name a player 'Bye' you get weird results~~
 - ~~No ability to load~~
 - No ability to modify round results between pairings
-- Dropping a player take a while to show in rankings
+- Dropping a player takes a while to show in rankings
 - ~~Corp and Runner IDs are not up to date (except for a Core 1.0 tournament)~~
 
 ## Some future plans (in rough order):
