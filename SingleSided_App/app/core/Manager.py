@@ -65,8 +65,6 @@ class Manager(object):
             print(f"{player_name} is not in the current list")
             return False
         return self.active_tournament.drop_player(player)
-        
-
     
     def start_tournament(self):
         """
@@ -106,7 +104,7 @@ class Manager(object):
 
     def _gui_return_rankings(self):
         """
-        Iterable that returns players in descending rank order (Score > SoS > ???)
+        Iterable that returns players in descending rank order (Score > SoS > Ext SoS)
         """
         for plr in self._rank_players():
             if not plr.name == "Bye":
@@ -147,7 +145,7 @@ class Manager(object):
             return "None"
         
 
-    def record_result(self, p1_id, p2_id, p1_points, p2_points):
+    def update_match_score(self, p1_id, p2_id, p1_points, p2_points):
         """
         Use to record/report a match result.
         p1_id: the numeric id of either player
@@ -155,55 +153,10 @@ class Manager(object):
         p1_points: Number of points p1 recieves (should be 3/1/0)
         p2_points: Number of points p1 recieves (should be 3/1/0)
         """
-        p1 = self.active_tournament.player_dict[p1_id]
-        p2 = self.active_tournament.player_dict[p2_id]
-        rnd = self.active_tournament.round
-
-        if p1.round_dict[rnd]["opp_id"] != p2_id:
-            raise ValueError(f"Players ({p1.name}, {p2.name}) are not playing this round")
         try:
-            p1.round_dict[rnd]['result']
-            raise ValueError(f"Players ({p1.name}, {p2.name}) already have a recorded result, did you mean 'ammend_result'?")
-        except KeyError:
-            pass
-        
-        if p1_id == -1:
-            p1_points = 0
-            p2_points = self.active_tournament.win_points
-        elif p2_id == -1:
-            p1_points = self.active_tournament.win_points
-            p2_points = 0
-
-        p1.record_result(rnd, p1_points)
-        p2.record_result(rnd, p2_points)
-        return (p1_id, p1_points, p2_id, p2_points)
-    
-    def ammend_result(self, p1_id, p2_id, p1_points, p2_points):
-        """
-        Use to ammend a match result.
-        p1_id: the numeric id of either player
-        p2_id: the numeric id of the other player
-        p1_points: Number of points p1 recieves (should be 3/1/0)
-        p2_points: Number of points p1 recieves (should be 3/1/0)
-        """
-        p1 = self.active_tournament.player_dict[p1_id]
-        p2 = self.active_tournament.player_dict[p2_id]
-        rnd = self.active_tournament.round
-
-        if p1.round_dict[rnd]["opp_id"] != p2_id:
-            raise ValueError(f"Players ({p1.name}, {p2.name}) are not playing this round")
-        
-        if p1_id == -1:
-            p1_points = 0
-            p2_points = self.active_tournament.win_points
-        elif p2_id == -1:
-            p1_points = self.active_tournament.win_points
-            p2_points = 0
-
-        p1.ammend_result(rnd, p1_points)
-        p2.ammend_result(rnd, p2_points)
-        return (p1_id, p1_points, p2_id, p2_points)
-
+            return self.active_tournament.record_result(p1_id, p2_id, p1_points, p2_points)
+        except ValueError:
+            return self.active_tournament.ammend_result(p1_id, p2_id, p1_points, p2_points)
 
     def check_round_done(self):
         """
@@ -211,38 +164,17 @@ class Manager(object):
         If it returns 'True' the round is done
         Otherwise it will return false and print a message for each player
         """
-        exceptions = 0
-        for plr in self.active_tournament.player_dict.values():
-            try:
-                plr.round_dict[self.active_tournament.round]["result"]
-            except KeyError:
-                print(f"Player {plr.name} does not have a recorded result for this round {self.active_tournament.round}")
-                exceptions += 1
-                continue
-        if exceptions > 0:
-            return False
-        else:
-            return True
+        return self.active_tournament.check_round_done()
 
     def pair_round(self,display=True):
         """
         Pairs round automatically- should allow for people to rematch with opposite sides
         """
-        t = self.active_tournament
-        # if not self.check_round_done():
-        #     raise ValueError("Not all pairs have reported")
-        t.round += 1
-        t.make_initial_graph()
-        iteration = 1
-        while not t.pairings_done:
-            print(iteration)
-            iteration += 1
-            t.make_pairings()
-            t.assign_sides()
-            t.test_pairings()
+        self.active_tournament.pair_round()
+        plr_dict = self.active_tournament.player_dict
         if display:
-            print(f"Pairing Result {t.test_pairings()}")
-            self.display_pairings()
+            for table in self._gui_return_pairings():
+                print(f"Table {table[0]}: Corp {plr_dict[table[1]].name} vs Runner {plr_dict[table[2]].name}")
     
     def finish_round(self,pair_next=True,display_rankings=True):
         """
@@ -252,59 +184,11 @@ class Manager(object):
         """
         if not self.check_round_done():
             raise ValueError("Not all pairs have reported")
-        self.compute_sos()
-        self.compute_ext_sos()
+        self.active_tournament.finish_round(pair_next)
         if display_rankings:
             self.display_rankings()
         if pair_next:
-            self.pair_round()
-    
-    def compute_sos(self):
-        for player in self.active_tournament.player_dict.values():
-            opponent_total_score = 0
-            opponents_games_played = 0
-            for rnd in player.round_dict.values():
-                try:
-                    opponent = self.active_tournament.player_dict[rnd['opp_id']]
-                    if opponent.name == 'Bye':
-                        continue
-                except KeyError:
-                    try:
-                        opponent = self.active_tournament.dropped_players[rnd['opp_id']]
-                        if opponent.name == 'Bye':
-                            continue
-                    except:
-                        continue
-                opponent_total_score += opponent.score
-                opponents_games_played += len(opponent.round_dict)
-            if opponents_games_played == 0:
-                #Handling div by 0 issues
-                opponents_games_played = 1
-            player.sos = opponent_total_score/opponents_games_played
-
-    def compute_ext_sos(self):
-        for player in self.active_tournament.player_dict.values():
-            opponents_total_sos = 0
-            opponents_games_played = 0
-            for rnd in player.round_dict.values():
-                try:
-                    opponent = self.active_tournament.player_dict[rnd['opp_id']]
-                    if opponent.name == 'Bye':
-                        continue
-                except KeyError:
-                    try:
-                        opponent = self.active_tournament.dropped_players[rnd['opp_id']]
-                        if opponent.name == 'Bye':
-                            continue
-                    except:
-                        continue
-                opponents_total_sos += opponent.sos
-                opponents_games_played += len(opponent.round_dict)
-            if opponents_games_played == 0:
-                #Handling div by 0 issues
-                opponents_games_played = 1
-            player.ext_sos = opponents_total_sos/opponents_games_played
-
+            self.display_pairings()
 
     def backup(self,path=None): 
         """
@@ -395,10 +279,10 @@ class Manager(object):
         for pair in self.active_tournament.pairings:
             if pair[0] * pair[1] < 0:
                 if pair[0] == -1:
-                    self.record_result(pair[0], pair[1], 0, 3)
+                    self.update_match_score(pair[0], pair[1], 0, 3)
                 else:
-                    self.record_result(pair[0], pair[1], 3, 0)
-            self.record_result(pair[0], pair[1], 3, 0)
+                    self.update_match_score(pair[0], pair[1], 3, 0)
+            self.update_match_score(pair[0], pair[1], 3, 0)
 
 
     def help(self):
@@ -424,5 +308,5 @@ if __name__ == "__main__":
     t_name =input("Tournament Name: ")
     m.create_tournament(t_name)
     print("Add players by typing m.add_player('#NAME'), when finished type m.start_tournament()")
-    print("Report results with m.record_result(...) and finish a round with m.finish_round()")
+    print("Report results with m.update_match_score(...) and finish a round with m.finish_round()")
     print("Type m.help() for more directions, or help(m.command())")

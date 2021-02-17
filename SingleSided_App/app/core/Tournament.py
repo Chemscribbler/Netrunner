@@ -151,4 +151,156 @@ class Tournament(object):
                 if plr.score < min_score:
                     min_score = plr.score
         return min_score
+    
+
+    def record_result(self, p1_id, p2_id, p1_points, p2_points):
+        """
+        Use to record/report a match result.
+        p1_id: the numeric id of either player
+        p2_id: the numeric id of the other player
+        p1_points: Number of points p1 recieves (should be 3/1/0)
+        p2_points: Number of points p1 recieves (should be 3/1/0)
+        """
+        p1 = self.player_dict[p1_id]
+        p2 = self.player_dict[p2_id]
+        rnd = self.round
+
+        if p1.round_dict[rnd]["opp_id"] != p2_id:
+            raise ValueError(f"Players ({p1.name}, {p2.name}) are not playing this round")
+        try:
+            p1.round_dict[rnd]['result']
+            raise ValueError(f"Players ({p1.name}, {p2.name}) already have a recorded result, did you mean 'ammend_result'?")
+        except KeyError:
+            pass
         
+        if p1_id == -1:
+            p1_points = 0
+            p2_points = self.win_points
+        elif p2_id == -1:
+            p1_points = self.win_points
+            p2_points = 0
+
+        p1.record_result(rnd, p1_points)
+        p2.record_result(rnd, p2_points)
+        return (p1_id, p1_points, p2_id, p2_points)
+    
+    def ammend_result(self, p1_id, p2_id, p1_points, p2_points):
+        """
+        Use to ammend a match result.
+        p1_id: the numeric id of either player
+        p2_id: the numeric id of the other player
+        p1_points: Number of points p1 recieves (should be 3/1/0)
+        p2_points: Number of points p1 recieves (should be 3/1/0)
+        """
+        p1 = self.player_dict[p1_id]
+        p2 = self.player_dict[p2_id]
+        rnd = self.round
+
+        if p1.round_dict[rnd]["opp_id"] != p2_id:
+            raise ValueError(f"Players ({p1.name}, {p2.name}) are not playing this round")
+        
+        if p1_id == -1:
+            p1_points = 0
+            p2_points = self.win_points
+        elif p2_id == -1:
+            p1_points = self.win_points
+            p2_points = 0
+
+        p1.ammend_result(rnd, p1_points)
+        p2.ammend_result(rnd, p2_points)
+        return (p1_id, p1_points, p2_id, p2_points)
+
+
+    def check_round_done(self):
+        """
+        Utility function to test if all pairs in the given round have reported results
+        If it returns 'True' the round is done
+        Otherwise it will return false and print a message for each player
+        """
+        exceptions = 0
+        for plr in self.player_dict.values():
+            try:
+                plr.round_dict[self.round]["result"]
+            except KeyError:
+                print(f"Player {plr.name} does not have a recorded result for this round {self.round}")
+                exceptions += 1
+                continue
+        if exceptions > 0:
+            return False
+        else:
+            return True
+
+    def pair_round(self):
+        """
+        Pairs round automatically- should allow for people to rematch with opposite sides
+        """
+        if not self.check_round_done():
+            raise ValueError("Not all pairs have reported")
+        self.round += 1
+        self.make_initial_graph()
+        iteration = 1
+        while not self.pairings_done:
+            print(iteration)
+            iteration += 1
+            self.make_pairings()
+            self.assign_sides()
+            self.test_pairings()
+    
+    def finish_round(self,pair_next=True):
+        """
+        Checks that the round is done, and depending on optional arguments, starts next round
+        pair_next: If True (default) will pair the next round, otherwise leave the round unpaired (can pair with pair_round)
+        display_rankings: If true (default) will print current standings
+        """
+        if not self.check_round_done():
+            raise ValueError("Not all pairs have reported")
+        self.compute_sos()
+        self.compute_ext_sos()
+        if pair_next:
+            self.pair_round()
+    
+    def compute_sos(self):
+        for player in self.player_dict.values():
+            opponent_total_score = 0
+            opponents_games_played = 0
+            for rnd in player.round_dict.values():
+                try:
+                    opponent = self.player_dict[rnd['opp_id']]
+                    if opponent.name == 'Bye':
+                        continue
+                except KeyError:
+                    try:
+                        opponent = self.dropped_players[rnd['opp_id']]
+                        if opponent.name == 'Bye':
+                            continue
+                    except:
+                        continue
+                opponent_total_score += opponent.score
+                opponents_games_played += len(opponent.round_dict)
+            if opponents_games_played == 0:
+                #Handling div by 0 issues
+                opponents_games_played = 1
+            player.sos = opponent_total_score/opponents_games_played
+
+    def compute_ext_sos(self):
+        for player in self.player_dict.values():
+            opponents_total_sos = 0
+            opponents_games_played = 0
+            for rnd in player.round_dict.values():
+                try:
+                    opponent = self.player_dict[rnd['opp_id']]
+                    if opponent.name == 'Bye':
+                        continue
+                except KeyError:
+                    try:
+                        opponent = self.dropped_players[rnd['opp_id']]
+                        if opponent.name == 'Bye':
+                            continue
+                    except:
+                        continue
+                opponents_total_sos += opponent.sos
+                opponents_games_played += len(opponent.round_dict)
+            if opponents_games_played == 0:
+                #Handling div by 0 issues
+                opponents_games_played = 1
+            player.ext_sos = opponents_total_sos/opponents_games_played

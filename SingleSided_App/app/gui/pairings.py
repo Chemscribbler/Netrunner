@@ -105,28 +105,19 @@ class PairingsFrame(tk.Frame):
     def select_corp_win(self):
         m = self.controller.manager
         players = self.get_players()
-        if self.is_ammend():
-            update = m.ammend_result(players[0], players[1], 3, 0)
-        else:
-            update = m.record_result(players[0], players[1], 3, 0)
+        update = m.update_match_score(players[0], players[1], 3, 0)
         self.update_row(update[1],update[3])
 
     def select_runner_win(self):
         m = self.controller.manager
         players = self.get_players()
-        if self.is_ammend():
-            update = m.ammend_result(players[0], players[1], 0, 3)
-        else:
-             update = m.record_result(players[0], players[1], 0, 3)
+        update = m.update_match_score(players[0], players[1], 0, 3)
         self.update_row(update[1],update[3])
 
     def select_tie(self):
         m = self.controller.manager
         players = self.get_players()
-        if self.is_ammend():
-            update = m.ammend_result(players[0], players[1], 1, 1)
-        else:
-            update = m.record_result(players[0], players[1], 1, 1)
+        update = m.update_match_score(players[0], players[1], 1, 1)
         self.update_row(update[1],update[3])
 
     def get_players(self):
@@ -134,15 +125,6 @@ class PairingsFrame(tk.Frame):
         corp_plr = self.pairings_table.item(row)['values'][5]
         run_plr = self.pairings_table.item(row)['values'][6]
         return (corp_plr, run_plr)
-
-    def is_ammend(self):
-        row = self.pairings_table.selection()
-        c_score = self.pairings_table.item(row)['values'][2]
-        r_score = self.pairings_table.item(row)['values'][4]
-        try:
-            return (c_score + r_score) > 0
-        except:
-            return False
 
     def update_row(self,c_score, r_score):
         row  = self.pairings_table.selection()
