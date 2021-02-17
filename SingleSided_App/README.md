@@ -16,20 +16,20 @@ This is an early version, so many features will be missing. Most importantly han
 
 ## Some current known limitations:
 - Resizing does not work the way it should (High Priority Fix)
-- If you mark the Bye player as winning the match, no error is thrown
+- ~~If you mark the Bye player as winning the match, no error is thrown~~ Ignores you and assigns the win correctly
 - If you name a player 'Bye' you get weird results
-- No ability to load
+- ~~No ability to load~~
 - No ability to modify round results between pairings
 - Dropping a player take a while to show in rankings
-- Corp and Runner IDs are not up to date (except for a Core 1.0 tournament)
+- ~~Corp and Runner IDs are not up to date (except for a Core 1.0 tournament)~~
 
 ## Some future plans (in rough order):
 - Automatically determine rounds & support cut
-- Make a pipeline for ABR uploading
+- Make a pipeline for ABR uploading - JSON export currently works
 - Double sided Swiss support
 - Dynamically adjust score factor (see explaination below)
 - ~~Get some Netrunnerdb integration to get updated ID choices~~
-- Ability to load/import tournaments
+- Ability to load/import tournaments - Partially complete
 
 
 If you have feature requests, it's probably best to make an issue. But you can also contact me on [Stimslack](https://www.google.com/url?q=https%3A%2F%2Fstimslackinvite.herokuapp.com%2F&sa=D&sntz=1&usg=AFQjCNGcS166Mr8z-H0l4RcoGM43C_dc5w) as Ysengrin.
