@@ -39,7 +39,7 @@ class Player():
                 pass
             else:
                 #If this is a rematch, does the forced side choice make their side bias worse (provided it's not 0)
-                if abs(self.side_balance + self.round_dict[curr_round]['side']) > self.side_balance and self.side_balance != 0:
+                if abs(self.side_balance + self.round_dict[curr_round]['side']) > abs(self.side_balance) and self.side_balance != 0:
                     print("Side would be wrong")
                     return False
                 else:
@@ -50,7 +50,11 @@ class Player():
         count = 0
         for rnd_record in self.round_dict.values():
             if rnd_record['opp_id'] == opp_id:
-                count += 1
+                try:
+                    rnd_record['result']
+                    count += 1
+                except KeyError:
+                    continue
         if count > 1:
             return True
         else:

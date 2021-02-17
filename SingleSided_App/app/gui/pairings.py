@@ -106,28 +106,28 @@ class PairingsFrame(tk.Frame):
         m = self.controller.manager
         players = self.get_players()
         if self.is_ammend():
-            m.ammend_result(players[0], players[1], 3, 0)
+            update = m.ammend_result(players[0], players[1], 3, 0)
         else:
-            m.record_result(players[0], players[1], 3, 0)
-        self.update_row(3,0)
+            update = m.record_result(players[0], players[1], 3, 0)
+        self.update_row(update[1],update[3])
 
     def select_runner_win(self):
         m = self.controller.manager
         players = self.get_players()
         if self.is_ammend():
-            m.ammend_result(players[0], players[1], 0, 3)
+            update = m.ammend_result(players[0], players[1], 0, 3)
         else:
-            m.record_result(players[0], players[1], 0, 3)
-        self.update_row(0,3)
+             update = m.record_result(players[0], players[1], 0, 3)
+        self.update_row(update[1],update[3])
 
     def select_tie(self):
         m = self.controller.manager
         players = self.get_players()
         if self.is_ammend():
-            m.ammend_result(players[0], players[1], 1, 1)
+            update = m.ammend_result(players[0], players[1], 1, 1)
         else:
-            m.record_result(players[0], players[1], 1, 1)
-        self.update_row(1,1)
+            update = m.record_result(players[0], players[1], 1, 1)
+        self.update_row(update[1],update[3])
 
     def get_players(self):
         row = self.pairings_table.selection()

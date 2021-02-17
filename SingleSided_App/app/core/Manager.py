@@ -166,9 +166,17 @@ class Manager(object):
             raise ValueError(f"Players ({p1.name}, {p2.name}) already have a recorded result, did you mean 'ammend_result'?")
         except KeyError:
             pass
+        
+        if p1_id == -1:
+            p1_points = 0
+            p2_points = self.active_tournament.win_points
+        elif p2_id == -1:
+            p1_points = self.active_tournament.win_points
+            p2_points = 0
 
         p1.record_result(rnd, p1_points)
         p2.record_result(rnd, p2_points)
+        return (p1_id, p1_points, p2_id, p2_points)
     
     def ammend_result(self, p1_id, p2_id, p1_points, p2_points):
         """
@@ -184,9 +192,17 @@ class Manager(object):
 
         if p1.round_dict[rnd]["opp_id"] != p2_id:
             raise ValueError(f"Players ({p1.name}, {p2.name}) are not playing this round")
+        
+        if p1_id == -1:
+            p1_points = 0
+            p2_points = self.active_tournament.win_points
+        elif p2_id == -1:
+            p1_points = self.active_tournament.win_points
+            p2_points = 0
 
         p1.ammend_result(rnd, p1_points)
         p2.ammend_result(rnd, p2_points)
+        return (p1_id, p1_points, p2_id, p2_points)
 
 
     def check_round_done(self):
@@ -222,10 +238,8 @@ class Manager(object):
             print(iteration)
             iteration += 1
             t.make_pairings()
+            t.assign_sides()
             t.test_pairings()
-        # print(t.player_dict)
-        # t.make_pairings()
-        t.assign_sides()
         if display:
             print(f"Pairing Result {t.test_pairings()}")
             self.display_pairings()
@@ -369,8 +383,6 @@ class Manager(object):
             writer.writerow(['Table',"Corp Player",'Runner Player'])
             for pair in pairings_iter:
                 writer.writerow([pair[0],d[pair[1]].name,d[pair[2]].name])
-
-
 
     def test_players(self, count):
         name_list = ["Alfa", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel", "India", "Juliett", "Kilo", "Lima", "Mike", "November", "Oscar", "Papa", "Quebec", "Romeo", "Sierra", "Tango", "Uniform", "Victor", "Whiskey", "X-ray", "Yankee", "Zulu"]
