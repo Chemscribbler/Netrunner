@@ -21,6 +21,16 @@ Another important leg to stand on here is to be respectful of your opponent. We 
 
 Because this is a new player tournament judges will be lenient with slow play calls, but if you do feel your opponent it intentionally slowing down the game to gain a benefit, please do reach out to a judge.
 
+
+## What to do on the day
+
+- Join the [Nisei Event Discord](https://discord.gg/T9mTp8bszR). We will be organizing the event in the online-gnks-1 channel.
+- 15 minutes before the start of the tournament there will be an optional player meeting. In that meeting I will re-outline the way the tournament will run, and then post pairings. During every round you are encouraged to go the appropriate "table" in the Voice Channels: Event1 grouping. That way if you and your opponent want to, you can talk during the game (but this is not required).
+- Then the player who will be playing the Corporation will create a game in the Competitive tab. The title name must include Table # where the # is what table you were assigned. When you make the table make sure "Allow Spectators" _is checked_, and "Make players' hidden information visible to spectators" is _not checked_.
+- When you and your opponent are both in, you are allowed to start the game and take mulligans. But the Corp player cannot click start turn until the TO starts the round. This will be announced in the Discord.
+- During the round you can @Ysengrin (and other volunteer judges) if you had mid-round questions/judge requests. You can also type ".timer" in the channel to see any active timers
+- When you finish your game *both* you and your opponent should report results [using this form](https://forms.gle/c4dK1AxHFQK9vWj6A)
+
 ## Decklists
 
 Every played must bring two legal decks, one Corporation, one Runner. Submission/claiming decklists is encouraged. If deckbuilding is intimidating (as is often true for a new cardpool) the following decklist below can be run as is, or modified by you. Each one is tournament legal, and can be exported to [Jinteki.net](jinteki.net) by selecting Actions > Export Jinteki.net and then copying and pasting. Or by using Jinteki.net's built in auto-import. To do that import copy the numbers that appear in the url after netrunnerdb.com/en/decklist/#####/....

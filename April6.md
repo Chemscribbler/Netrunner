@@ -4,7 +4,7 @@ Getting in the earliest(1) possible Gateway in Standard tournament season off wi
 
 The event starts at [10 AM PST](https://time.is/Los_Angeles) at will be 6-8 rounds of single sided swiss (35 minutes each) with a 30 minute break after round 6. Round count will follow Nisei OP suggestions.
 
-One goal of this tournament is to get the next round of Project Crow decks up an running, so we are strongly encouraging people to share the decklists after the conclusion of the event. Lostgeek is hoping to go over them afterwards and begin to help new players transition into standard.
+One goal of this tournament is to get the next round of [Project Crow](https://netrunnerdb.com/en/decklist/58969) decks up an running, so we are strongly encouraging people to share the decklists after the conclusion of the event. Lostgeek is hoping to go over them afterwards and begin to help new players transition into standard.
 
 ## Registration
 
