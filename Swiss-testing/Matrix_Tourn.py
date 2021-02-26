@@ -26,7 +26,8 @@ class Tourney(object):
     
     def make_score_penalty_array(self):
         df = np.array([[player.score for player in self.player_dict.values()]])
-        df = abs(df - df.T)*self.score_factor
+        df = abs(df - df.T)
+        df = (df*(df+1))/2*self.score_factor
         return df
     
     def make_side_penalty_array(self):
@@ -52,7 +53,7 @@ class Tourney(object):
 
     def construct_pairings_matrix(self):
         pairing_matrix = 1000-self.make_score_penalty_array() - self.make_side_penalty_array()
-        pairing_matrix += np.random.random(0,1,size=(len(self.player_dict), len(self.player_dict)))
+        pairing_matrix += np.random.random(size=(len(self.player_dict), len(self.player_dict)))
         pairing_matrix = pd.DataFrame(pairing_matrix,
             index=[key for key in self.player_dict.keys()],
             columns =[key for key in self.player_dict.keys()])

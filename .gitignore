@@ -10,3 +10,8 @@ SingleSided_App/app/gui/test.py
 SingleSided_App/build
 SingleSided_App/dist/sass
 SingleSided_App/__pycache__
+SingleSided_App/__pycache__/Tournament.cpython-37.pyc
+Cobra-parsing/JnetAnalysis.Rmd
+*.pkl
+windows_build.py
+app.db

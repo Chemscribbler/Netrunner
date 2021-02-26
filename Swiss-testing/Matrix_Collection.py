@@ -62,7 +62,7 @@ def display_pairings(tourney):
                 break
 
 
-def test_single_tournament(player_list, num_rounds, score_factor=200, double_sided=False):
+def test_single_tournament(player_list, num_rounds, score_factor=2, double_sided=False):
     t = construct_tourney(player_list)
     t.score_factor = score_factor
     t.sim_tourney(num_rounds, double_sided=double_sided)
@@ -72,7 +72,7 @@ def test_single_tournament(player_list, num_rounds, score_factor=200, double_sid
         player.final_side_balance.append(player.side_balance)
 
  
-def test_tournament_conditions(num_tests, player_list, num_rounds, score_factor=200, double_sided=False,verbose=True):
+def test_tournament_conditions(num_tests, player_list, num_rounds, score_factor=2, double_sided=False,verbose=True):
     for i in range(num_tests):
         t = construct_tourney(player_list)
         t.score_factor = score_factor
@@ -98,12 +98,13 @@ def results_collation(player_list, num_sims, file_name, top_x=4):
                 top_x_count += player.finish[i]
             results_writer.writerow([player.id,player.str,top_x_count,player.off_pair,player.pairing_diff-player.off_pair,num_sims-count])
 
-def collect_across_distribution(player_count, num_plr_dist, num_sims, file_name,\
+def collect_across_distribution(player_count, num_plr_dist, num_sims,\
                                 sss_rounds, dss_rounds, player_dist, top_x=4,verbose=True):
     df_dss = pd.DataFrame(0, columns=range(player_count),index=range(player_count))
-    df_sss_75 = pd.DataFrame(0, columns=range(player_count),index=range(player_count))
-    df_sss_200 = pd.DataFrame(0, columns=range(player_count),index=range(player_count))
-    df_sss_600 = pd.DataFrame(0, columns=range(player_count),index=range(player_count))
+    df_sss_1 = pd.DataFrame(0, columns=range(player_count),index=range(player_count))
+    df_sss_2 = pd.DataFrame(0, columns=range(player_count),index=range(player_count))
+    df_sss_3 = pd.DataFrame(0, columns=range(player_count),index=range(player_count))
+    df_sss_10 = pd.DataFrame(0, columns=range(player_count),index=range(player_count))
 
     for _ in range(num_plr_dist):
         timer=time()
@@ -115,25 +116,30 @@ def collect_across_distribution(player_count, num_plr_dist, num_sims, file_name,
         df_dss += temp_df
 
         reset_counter_stats(players)
+        test_tournament_conditions(num_sims, players, num_rounds=sss_rounds, score_factor=1,verbose=verbose)
+        temp_df = pd.DataFrame([plr.finish for plr in players]).T
+        df_sss_1 += temp_df
+
+        reset_counter_stats(players)
+        test_tournament_conditions(num_sims, players, num_rounds=sss_rounds, score_factor=2,verbose=verbose)
+        temp_df = pd.DataFrame([plr.finish for plr in players]).T
+        df_sss_2 += temp_df
+
+        reset_counter_stats(players)
         test_tournament_conditions(num_sims, players, num_rounds=sss_rounds, score_factor=3,verbose=verbose)
         temp_df = pd.DataFrame([plr.finish for plr in players]).T
-        df_sss_75 += temp_df
+        df_sss_3 += temp_df
 
         reset_counter_stats(players)
-        test_tournament_conditions(num_sims, players, num_rounds=sss_rounds, score_factor=8,verbose=verbose)
+        test_tournament_conditions(num_sims, players, num_rounds=sss_rounds, score_factor=10,verbose=verbose)
         temp_df = pd.DataFrame([plr.finish for plr in players]).T
-        df_sss_200 += temp_df
-
-        reset_counter_stats(players)
-        test_tournament_conditions(num_sims, players, num_rounds=sss_rounds, score_factor=24,verbose=verbose)
-        temp_df = pd.DataFrame([plr.finish for plr in players]).T
-        df_sss_600 += temp_df
+        df_sss_10 += temp_df
 
         print((time()-timer)/60)
     
-    return [df_dss, df_sss_75, df_sss_200, df_sss_600]
+    return [df_dss, df_sss_1, df_sss_2, df_sss_3, df_sss_10]
 
-def test_format_correllation(num_sims, dss_rounds=8, sss_rounds=6, num_players=32, sss_sf=200, shuffle_plrs=True):
+def test_format_correllation(num_sims, dss_rounds=8, sss_rounds=6, num_players=32, sss_sf=2, shuffle_plrs=True):
     d_error_array = []
     if not shuffle_plrs:
         plr_list = tilted_strength(num_players)
@@ -210,11 +216,11 @@ if __name__ == "__main__":
     # players = 32
     # num_sims = 100
 
-    a = collect_across_distribution(32,50,100,"test",6,8,tilted_strength,verbose=False)
-    list_names = ['dss', '3_sss', '8_sss', '24_sss']
-    for item, name in zip(a,list_names):
-        item.to_csv(f"{name}.csv")
-    tic = time()
+    # a = collect_across_distribution(28,50,100,6,8,tilted_strength,verbose=False)
+    # list_names = ['dss', '1_sss', '2_sss', '3_sss', '10_sss']
+    # for item, name in zip(a,list_names):
+    #     item.to_csv(f"{name}.csv")
+    # tic = time()
     # score_factor = 75
     # num_rounds = 6
     # reset_counter_stats(players)
@@ -235,3 +241,18 @@ if __name__ == "__main__":
     #     df = pd.DataFrame.from_dict(a)
     #     df.to_csv(f"{num_plr}_sss_players_corr_pearson.csv")
     #     print(f"{(time()-tmr)/60}: {num_plr} with {rnd_cap}")
+
+    players = tilted_strength(28,0.5)
+    num_sims = 3000
+
+    reset_counter_stats(players)
+
+    test_tournament_conditions(num_tests=num_sims,player_list=players,num_rounds=8,double_sided=True)
+    results_collation(players,num_sims,top_x=4,file_name= f"{3000}_dss_8_rnds_32_players")
+    reset_counter_stats(players)
+
+    score_factors = [1,2,3,10]
+    for sf in score_factors:
+        test_tournament_conditions(num_tests=num_sims,player_list=players,num_rounds=6,score_factor=sf)
+        results_collation(players,num_sims,f"{num_sims}_sss_6_rnds_32_players_{sf}_sf",top_x=4)
+        reset_counter_stats(players)

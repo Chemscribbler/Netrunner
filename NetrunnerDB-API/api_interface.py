@@ -4,10 +4,23 @@ import json
 
 root_address = "https://netrunnerdb.com/api/2.0/"
 
-#For pulling from next rotation (AKA Mumbad-Gateway)
-valid_codes = ['order-and-chaos','data-and-destiny','mumbad','flashpoint','red-sand','kitara','reign-and-reverie','magnum-opus','ashes']
+# For pulling from next rotation (AKA Mumbad-Gateway)
+valid_codes = [
+    "sansan",
+    "honor-and-profit",
+    "order-and-chaos",
+    "data-and-destiny",
+    "mumbad",
+    "flashpoint",
+    "red-sand",
+    "kitara",
+    "reign-and-reverie",
+    "magnum-opus",
+    "ashes",
+    "sc19",
+]
 
-#Requesting all cards, then filtering on valid codes. Will add each card name, side, and faction to a dictionary
+# Requesting all cards, then filtering on valid codes. Will add each card name, side, and faction to a dictionary
 
 # response = requests.get(root_address+"public/cards")
 
@@ -33,11 +46,14 @@ with open("cards.json") as f:
 
 legal_cards = {}
 
-for card in all_cards['data']:
-    if card['pack_code'] in filtered_packs:
-        legal_cards[card['title']] = {"faction":card['faction_code'],"card_type":card['type_code']}
+for card in all_cards["data"]:
+    if card["pack_code"] in filtered_packs:
+        legal_cards[card["title"]] = {
+            "faction": card["faction_code"],
+            "card_type": card["type_code"],
+        }
 
-with open("filtered_cards.csv", "w",newline="",encoding="utf-8") as f:
+with open("legal_cards.csv", "w", newline="", encoding="utf-8") as f:
     w = csv.writer(f)
     for key, value in legal_cards.items():
-        w.writerow([key, value['faction'], value['card_type']])
+        w.writerow([key, value["faction"], value["card_type"]])
